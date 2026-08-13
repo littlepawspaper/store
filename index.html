@@ -543,14 +543,21 @@
         let currentSelectedData = null;
         let selectedPaperFormat = 'A4';
 
-        async function handleGoogleAuth() {
-            if (supabaseClient) {
-                const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
-                if (error) showToast(error.message, "⚠️");
-            } else {
-                mockLoginSuccess();
+        
+            async function handleGoogleAuth() {
+    if (supabaseClient) {
+        const { error } = await supabaseClient.auth.signInWithOAuth({ 
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin // 讓 Google 登入後自動跳回當前網站網址
             }
-        }
+        });
+        if (error) showToast(error.message, "⚠️");
+    } else {
+        mockLoginSuccess();
+    }
+}
+
 
         async function handleEmailAuth(event) {
             event.preventDefault(); 
