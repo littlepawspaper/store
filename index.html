@@ -118,7 +118,7 @@
     <main id="gallery" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow w-full">
         
         <!-- 分類標籤滑動欄 - 已優化手機可流暢橫滑 -->
-        <div class="flex items-center overflow-x-auto pb-3 mb-6 sm:mb-10 gap-2 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:justify-center">
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-8 sm:mb-12">
             <button onclick="filterGallery('all')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition" data-filter="all">
                 All Designs
             </button>
@@ -137,7 +137,7 @@
         </div>
 
         <!-- 填色圖網格 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
             
             <!-- 卡片 1 -->
             <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="floral">
@@ -270,7 +270,7 @@
             </div>
 
             <div class="overflow-y-auto p-4 sm:p-6 flex flex-col md:flex-row gap-4 sm:gap-6">
-                <div class="w-full md:w-1/2 aspect-[4/5] bg-cream-100 rounded-2xl overflow-hidden relative shadow-inner flex-shrink-0 max-h-[350px] sm:max-h-none">
+                <div class="w-full md:w-1/2 aspect-[4/5] bg-cream-100 rounded-2xl overflow-hidden relative shadow-inner flex-shrink-0 max-h-[400px] sm:max-h-none">
                     <img id="modal-img" src="" alt="Preview" class="w-full h-full object-cover">
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15">
                         <span class="font-serif text-xl sm:text-2xl font-bold tracking-widest text-black rotate-[-30deg]">Littlepawspaper</span>
