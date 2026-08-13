@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Littlepawspaper | Printable Coloring Pages</title>
-    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase JS CDN (引入 Supabase 官方庫) -->
+    <!-- Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -62,14 +59,17 @@
 </head>
 <body class="bg-cream-50 text-sage-700 min-h-screen flex flex-col selection:bg-sage-100">
 
+    <!-- 頂部導覽列 (Navbar) -->
     <header class="sticky top-0 z-40 bg-cream-50/90 backdrop-blur-md border-b border-cream-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+            <!-- Logo -->
             <a href="#" class="font-serif text-xl sm:text-3xl font-bold tracking-wide text-sage-700 italic hover:opacity-80 transition whitespace-nowrap">
                 Littlepawspaper
             </a>
 
+            <!-- 導覽與會員區 -->
             <div class="flex items-center space-x-2 sm:space-x-6">
-                <!-- 未登入狀態 -->
+                <!-- 未登入狀態按鈕 -->
                 <div id="logged-out-nav" class="flex items-center space-x-1.5 sm:space-x-3">
                     <button onclick="openAuthModal('signin')" class="text-xs sm:text-base font-medium px-2.5 py-1.5 sm:px-4 sm:py-2 text-sage-700 hover:text-sage-500 transition whitespace-nowrap">
                         Sign In
@@ -79,7 +79,7 @@
                     </button>
                 </div>
 
-                <!-- 已登入狀態 -->
+                <!-- 已登入狀態區塊 -->
                 <div id="logged-in-nav" class="hidden items-center space-x-2 sm:space-x-4">
                     <div onclick="doubleClickSecretZero(event)" class="cursor-pointer bg-sage-100 hover:bg-sage-200 transition px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full flex items-center space-x-1.5 border border-sage-500/20 shadow-sm" title="Double click to reset points for testing!">
                         <span class="text-sm sm:text-base">🐾</span>
@@ -97,14 +97,14 @@
         </div>
     </header>
 
-    <!-- 滿版橫幅設計 (w-full bg-cream-100) -->
+    <!-- 主視覺區塊 (Hero Section) - 電腦版 100% 滿版底色，手機版維持原樣 -->
     <section class="w-full bg-cream-100 py-6 sm:py-16 px-4 text-center border-b border-cream-200">
         <div class="max-w-3xl mx-auto">
             <h1 class="font-serif text-3xl sm:text-6xl font-bold tracking-tight text-sage-700 mb-2 sm:mb-4">
                 Color Your World <span class="italic font-normal text-sage-500">with Joy</span>
             </h1>
             <p class="text-xs sm:text-lg text-sage-600/90 max-w-xl mx-auto font-light leading-relaxed mb-5 px-2">
-                Discover exclusive printable coloring pages. Join today and get <strong class="font-semibold text-sage-700">5 Free Paws Point</strong> to start downloading!
+                Discover exclusive printable coloring pages. <br>Join today and get <strong class="font-semibold text-sage-700">5 Free Paws Point</strong> to start downloading!
             </p>
             <div class="flex items-center justify-center gap-2 sm:gap-4">
                 <a href="#gallery" class="whitespace-nowrap bg-sage-500 hover:bg-sage-600 text-white font-medium px-5 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base">
@@ -118,110 +118,42 @@
         </div>
     </section>
 
+    <!-- 主圖庫區塊 (Gallery Section) -->
     <main id="gallery" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow w-full">
-        <!-- 分類標籤 -->
+        
+        <!-- 分類標籤欄 -->
         <div class="flex flex-wrap items-center justify-center gap-2 mb-8 sm:mb-12">
-            <button onclick="filterGallery('all')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition" data-filter="all">All Designs</button>
-            <button onclick="filterGallery('floral')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="floral">Botanical & Floral</button>
-            <button onclick="filterGallery('cozy')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="cozy">Cozy Life</button>
-            <button onclick="filterGallery('mandala')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="mandala">Mandala & Zen</button>
-            <button onclick="filterGallery('kids')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="kids">Kids Zone</button>
+            <button onclick="filterGallery('all')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition" data-filter="all">
+                All Designs
+            </button>
+            <button onclick="filterGallery('floral')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="floral">
+                Botanical & Floral
+            </button>
+            <button onclick="filterGallery('cozy')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="cozy">
+                Cozy Life
+            </button>
+            <button onclick="filterGallery('mandala')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="mandala">
+                Mandala & Zen
+            </button>
+            <button onclick="filterGallery('kids')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="kids">
+                Kids Zone
+            </button>
         </div>
 
-        <!-- 雙欄圖庫 (手機 2 欄, 桌面 4 欄) -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-            <!-- Card 1 -->
-            <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="floral">
-                <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Vintage Floral Wreath', category: 'Botanical', desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!', cost: 1, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80'})">
-                    <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" alt="Floral Wreath" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
-                    </div>
-                </div>
-                <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
-                    <div>
-                        <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">Botanical</div>
-                        <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">Vintage Floral Wreath</h3>
-                    </div>
-                    <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
-                        <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
-                            <span>🐾</span><span>1 Point</span>
-                        </span>
-                        <button onclick="openPreview({title: 'Vintage Floral Wreath', category: 'Botanical', desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!', cost: 1, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80'})" class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
-                    </div>
-                </div>
-            </div>
+        <!-- 填色圖動態網格容器 -->
+        <div id="gallery-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+            <!-- 動態渲染卡片位置 -->
+        </div>
 
-            <!-- Card 2 -->
-            <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="cozy">
-                <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Cat & Coffee Morning', category: 'Cozy Life', desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.', cost: 1, image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80'})">
-                    <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80" alt="Cat Coffee" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
-                    </div>
-                </div>
-                <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
-                    <div>
-                        <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">Cozy Life</div>
-                        <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">Cat & Coffee Morning</h3>
-                    </div>
-                    <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
-                        <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
-                            <span>🐾</span><span>1 Point</span>
-                        </span>
-                        <button onclick="openPreview({title: 'Cat & Coffee Morning', category: 'Cozy Life', desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.', cost: 1, image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80'})" class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="mandala">
-                <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Zen Garden Mandala', category: 'Mandala & Zen', desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.', cost: 2, image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'})">
-                    <span class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-sage-700/80 backdrop-blur-sm text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider shadow">Detailed</span>
-                    <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" alt="Mandala" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
-                    </div>
-                </div>
-                <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
-                    <div>
-                        <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">Mandala & Zen</div>
-                        <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">Zen Garden Mandala</h3>
-                    </div>
-                    <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
-                        <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
-                            <span>🐾</span><span>2 Points</span>
-                        </span>
-                        <button onclick="openPreview({title: 'Zen Garden Mandala', category: 'Mandala & Zen', desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.', cost: 2, image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'})" class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="kids">
-                <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Little Dinosaur Adventure', category: 'Kids Zone', desc: 'Thick, bold lines and simple friendly dinosaur characters designed specially for young kids and toddlers. Fun and easy to color!', cost: 1, image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80'})">
-                    <span class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-amber-600/85 backdrop-blur-sm text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider shadow">Kids Favorite</span>
-                    <img src="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80" alt="Dino" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
-                    </div>
-                </div>
-                <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
-                    <div>
-                        <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">Kids Zone</div>
-                        <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">Little Dinosaur Adventure</h3>
-                    </div>
-                    <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
-                        <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
-                            <span>🐾</span><span>1 Point</span>
-                        </span>
-                        <button onclick="openPreview({title: 'Little Dinosaur Adventure', category: 'Kids Zone', desc: 'Thick, bold lines and simple friendly dinosaur characters designed specially for young kids and toddlers. Fun and easy to color!', cost: 1, image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80'})" class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
-                    </div>
-                </div>
-            </div>
+        <!-- Load More 按鈕區 -->
+        <div id="load-more-container" class="mt-12 text-center">
+            <button onclick="loadMorePages()" id="load-more-btn" class="bg-white hover:bg-cream-100 text-sage-700 border border-sage-500/40 font-semibold px-8 py-3 rounded-full shadow-sm transition text-base inline-flex items-center space-x-2">
+                <span>Load More Pages</span>
+            </button>
         </div>
     </main>
 
+    <!-- 底部資訊列 (Footer) -->
     <footer class="bg-cream-100 border-t border-cream-200 mt-10 sm:mt-16 py-8 sm:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
             <div>
@@ -237,13 +169,17 @@
         </div>
     </footer>
 
-    <!-- 1. 圖片預覽彈窗 (大螢幕放大) -->
+    <!-- ================= 彈窗元件 (Modals) ================= -->
+
+    <!-- 1. 圖片預覽與下載彈窗 -->
     <div id="preview-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-3xl max-w-2xl md:max-w-4xl lg:max-w-5xl w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 max-h-[92vh] flex flex-col" id="preview-modal-content">
+            
             <div class="flex items-center justify-between px-5 py-3.5 sm:px-8 sm:py-5 border-b border-cream-100 flex-shrink-0">
                 <span id="modal-category" class="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wider text-sage-500">Category</span>
                 <button onclick="closePreview()" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs md:text-base font-bold transition">✕</button>
             </div>
+
             <div class="overflow-y-auto p-4 sm:p-8 md:p-10 flex flex-col md:flex-row gap-6 md:gap-10">
                 <div class="w-full md:w-1/2 aspect-[4/5] bg-cream-100 rounded-2xl overflow-hidden relative shadow-inner flex-shrink-0 max-h-[380px] md:max-h-none">
                     <img id="modal-img" src="" alt="Preview" class="w-full h-full object-cover">
@@ -251,14 +187,17 @@
                         <span class="font-serif text-xl sm:text-3xl md:text-4xl font-bold tracking-widest text-black rotate-[-30deg]">Littlepawspaper</span>
                     </div>
                 </div>
+
                 <div class="w-full md:w-1/2 flex flex-col justify-between space-y-4 md:space-y-6">
                     <div>
                         <h2 id="modal-title" class="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-sage-700 mb-2 md:mb-4">Title</h2>
                         <p id="modal-desc" class="text-xs sm:text-sm md:text-base lg:text-lg text-sage-600/90 leading-relaxed mb-4 md:mb-6">Description goes here...</p>
+                        
                         <div class="flex flex-wrap gap-2 mb-4 md:mb-6">
                             <span class="text-[11px] sm:text-xs md:text-sm bg-cream-100 text-sage-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl font-medium">📄 High-Res PDF</span>
                             <span class="text-[11px] sm:text-xs md:text-sm bg-cream-100 text-sage-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl font-medium">⚡ Instant Download</span>
                         </div>
+
                         <div class="mb-4">
                             <label class="block text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wider text-sage-500 mb-2">Select Format</label>
                             <div class="grid grid-cols-2 gap-3">
@@ -273,6 +212,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="pt-4 border-t border-cream-100 flex items-center justify-between">
                         <div>
                             <span class="text-[10px] sm:text-xs md:text-sm text-sage-500 block">Cost</span>
@@ -289,13 +229,14 @@
         </div>
     </div>
 
-    <!-- 2. 儲值點數彈窗 (完美還原版設計) -->
-    <div id="topup-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-white rounded-3xl max-w-xl md:max-w-4xl lg:max-w-5xl w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 relative p-6 sm:p-10 md:p-12" id="topup-modal-content">
-            
-            <button onclick="closeTopUpModal()" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50 hover:bg-cream-100 text-sage-500 flex items-center justify-center text-sm md:text-base font-bold transition">✕</button>
+    <!-- 2. 儲值點數彈窗 (Top Up Modal) - 完美還原設計圖 -->
+<div id="topup-modal" class="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-xl md:max-w-4xl lg:max-w-5xl w-full overflow-y-auto max-h-[88vh] my-auto shadow-2xl transform scale-95 transition-transform duration-300 relative p-6 sm:p-10 md:p-12" id="topup-modal-content">
+        
+        <!-- 關閉按鈕：加上 z-10 與 sticky/absolute 確保手機滑動時依然能點擊或固定在右上角 -->
+        <button onclick="closeTopUpModal()" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50 hover:bg-cream-100 text-sage-500 flex items-center justify-center text-sm md:text-base font-bold transition z-10">✕</button>
 
-            <div class="text-center mb-8 md:mb-12">
+        <div class="text-center mb-6 md:mb-12 pt-2 sm:pt-0">
                 <h3 class="font-serif text-2xl md:text-4xl lg:text-5xl font-bold text-sage-700 mb-2 md:mb-4">Get More Paws Point 🐾</h3>
                 <p class="text-[11px] sm:text-xs md:text-sm text-sage-600 max-w-lg mx-auto leading-relaxed">Unlock more exclusive coloring pages. Choose the package that fits your creative journey. <br class="hidden sm:block">Secure payment via Stripe.</p>
             </div>
@@ -358,14 +299,12 @@
                         <div class="w-3 h-3 rounded-full bg-red-500 mr-[-4px] opacity-90"></div>
                         <div class="w-3 h-3 rounded-full bg-yellow-400 opacity-90 mix-blend-multiply"></div>
                     </div>
-                    <div class="border border-cream-200 rounded px-3 py-1.5 text-[10px] font-bold text-gray-700 bg-white shadow-sm">Pay</div>
-                    <div class="border border-cream-200 rounded px-3 py-1.5 text-[10px] font-bold text-gray-700 bg-white shadow-sm">G Pay</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 3. 登入/註冊彈窗 (修復了缺少 id="auth-email" 的問題) -->
+    <!-- 3. 登入/註冊彈窗 -->
     <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 p-6 sm:p-8" id="auth-modal-content">
             <div class="flex items-center justify-between mb-5">
@@ -384,7 +323,6 @@
                 <div class="flex-grow border-t border-cream-200"></div>
             </div>
 
-            <!-- 注意這裡：表單連結了 handleEmailAuth 並補回了正確的 ID -->
             <form onsubmit="handleEmailAuth(event)" class="space-y-3 sm:space-y-4 mt-2">
                 <div>
                     <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sage-500 mb-1">Email Address</label>
@@ -414,44 +352,194 @@
         const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
         
-        // 將變數名稱從 supabase 改為 supabaseClient，避免與官方 CDN 衝突
         let supabaseClient = null;
-        
-        // 只有當你填入真實 URL 時才會啟用 Supabase，否則依然提供單機預覽體驗
         if (SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE') {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
         // ==========================================
-        // 網頁狀態變數
+        // 產品資料庫 (支援 Load More 分頁功能)
         // ==========================================
-        let isLoggedIn = false;
-        let userPoints = 0; 
-        let currentAuthMode = 'signin'; 
-        let currentSelectedData = null;
-        let selectedPaperFormat = 'A4';
+        const allProducts = [
+            {
+                title: 'Vintage Floral Wreath',
+                category: 'floral',
+                categoryName: 'Botanical',
+                desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!',
+                cost: 1,
+                image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+                badge: null
+            },
+            {
+                title: 'Cozy Sleeping Cat',
+                category: 'cozy',
+                categoryName: 'Cozy Life',
+                desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.',
+                cost: 1,
+                image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80',
+                badge: null
+            },
+            {
+                title: 'Zen Garden Mandala',
+                category: 'mandala',
+                categoryName: 'Mandala & Zen',
+                desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.',
+                cost: 2,
+                image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
+                badge: 'Detailed'
+            },
+            {
+                title: 'Fairy Mushroom House',
+                category: 'kids',
+                categoryName: 'Kids Zone',
+                desc: 'A magical whimsical mushroom cottage surrounded by flowers and butterflies. Simple bold outlines perfect for children and casual coloring.',
+                cost: 1,
+                image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80',
+                badge: 'Kids Favorite'
+            },
+            {
+                title: 'Blooming Botanicals',
+                category: 'floral',
+                categoryName: 'Botanical',
+                desc: 'Hand-drawn wild flowers and ferns arranged in an elegant composition. Great for framing after coloring.',
+                cost: 1,
+                image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800&q=80',
+                badge: null
+            },
+            {
+                title: 'Rainy Window Tea Time',
+                category: 'cozy',
+                categoryName: 'Cozy Life',
+                desc: 'Enjoy a peaceful rainy afternoon with a hot cup of tea, pastries, and a warm blanket.',
+                cost: 1,
+                image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80',
+                badge: 'Bestseller'
+            },
+            {
+                title: 'Geometric Harmony',
+                category: 'mandala',
+                categoryName: 'Mandala & Zen',
+                desc: 'Symmetrical patterns designed to soothe your mind and enhance focus.',
+                cost: 2,
+                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+                badge: null
+            },
+            {
+                title: 'Happy Little Dinosaur',
+                category: 'kids',
+                categoryName: 'Kids Zone',
+                desc: 'Friendly little dino having fun in the sunny forest. Extra thick lines for easy coloring.',
+                cost: 1,
+                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
+                badge: null
+            }
+        ];
 
-        // 頁面載入時檢查是否已透過 Supabase 登入
+        let currentDisplayCount = 4; // 預設一開始顯示 4 張
+        let currentFilter = 'all';
+
+        // 初始化載入
         document.addEventListener('DOMContentLoaded', async () => {
+            renderGallery();
             if (supabaseClient) {
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (session) {
                     isLoggedIn = true;
-                    userPoints = 5; // 未來會從資料庫拉取真實點數
+                    userPoints = 5;
                     updateNavState();
                 }
             }
         });
 
+        // 渲染圖庫
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+
+            // 過濾分類
+            const filtered = currentFilter === 'all' 
+                ? allProducts 
+                : allProducts.filter(p => p.category === currentFilter);
+
+            // 分頁限制
+            const sliced = filtered.slice(0, currentDisplayCount);
+
+            sliced.forEach(product => {
+                const badgeHtml = product.badge 
+                    ? `<span class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-sage-700/80 backdrop-blur-sm text-white text-[9px] sm:text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">${product.badge}</span>`
+                    : '';
+
+                const cardHtml = `
+                    <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="${product.category}">
+                        <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick='openPreview(${JSON.stringify(product)})'>
+                            ${badgeHtml}
+                            <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/800x1000/F2EDE4/4D5952?text=Littlepawspaper'">
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
+                            </div>
+                        </div>
+                        <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
+                            <div>
+                                <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">${product.categoryName}</div>
+                                <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">${product.title}</h3>
+                            </div>
+                            <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
+                                <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
+                                    <span>🐾</span><span>${product.cost} ${product.cost > 1 ? 'Points' : 'Point'}</span>
+                                </span>
+                                <button onclick='openPreview(${JSON.stringify(product)})' class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += cardHtml;
+            });
+
+            // 判斷是否隱藏 Load More 按鈕
+            const loadMoreBtn = document.getElementById('load-more-container');
+            if (currentDisplayCount >= filtered.length) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'block';
+            }
+        }
+
+        // 點擊 Load More 按鈕
+        function loadMorePages() {
+            currentDisplayCount += 4; // 每次多載入 4 張
+            renderGallery();
+        }
+
+        // 過濾分類
+        function filterGallery(category) {
+            currentFilter = category;
+            currentDisplayCount = 4; // 切換分類時重置顯示數量
+
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => {
+                if(btn.dataset.filter === category) {
+                    btn.className = "category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition";
+                } else {
+                    btn.className = "category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition";
+                }
+            });
+
+            renderGallery();
+        }
+
         // ==========================================
-        // 核心認證邏輯 (Auth)
+        // 核心認證與互動邏輯
         // ==========================================
+        let isLoggedIn = false;
+        let userPoints = 5; 
+        let currentAuthMode = 'signin'; 
+        let currentSelectedData = null;
+        let selectedPaperFormat = 'A4';
+
         async function handleGoogleAuth() {
             if (supabaseClient) {
                 const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
-                if (error) {
-                    showToast(error.message, "⚠️");
-                }
+                if (error) showToast(error.message, "⚠️");
             } else {
                 mockLoginSuccess();
             }
@@ -467,32 +555,25 @@
 
             if (supabaseClient) {
                 if (currentAuthMode === 'signup') {
-                    const { data, error } = await supabaseClient.auth.signUp({ email, password });
-                    if (error) {
-                        showToast(error.message, "⚠️");
-                    } else {
+                    const { error } = await supabaseClient.auth.signUp({ email, password });
+                    if (error) showToast(error.message, "⚠️");
+                    else {
                         showToast("Check your email to verify your account!", "📧");
                         closeAuthModal();
                     }
                 } else {
-                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                    if (error) {
-                        showToast("Invalid login credentials.", "⚠️");
-                    } else {
-                        mockLoginSuccess(); 
-                    }
+                    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) showToast("Invalid login credentials.", "⚠️");
+                    else mockLoginSuccess(); 
                 }
             } else {
                 setTimeout(() => mockLoginSuccess(), 800);
             }
-            
             btnText.textContent = currentAuthMode === 'signup' ? "Sign Up" : "Sign In";
         }
 
         async function handleLogout() {
-            if (supabaseClient) {
-                await supabaseClient.auth.signOut();
-            }
+            if (supabaseClient) await supabaseClient.auth.signOut();
             isLoggedIn = false;
             updateNavState();
             showToast("Logged out successfully.", "👋");
@@ -506,9 +587,6 @@
             showToast("Welcome! Received 5 Free Points 🐾", "🎉");
         }
 
-        // ==========================================
-        // UI 更新與互動邏輯
-        // ==========================================
         function updateNavState() {
             const loggedOutNav = document.getElementById('logged-out-nav');
             const loggedInNav = document.getElementById('logged-in-nav');
@@ -534,29 +612,9 @@
             showToast("Dev mode: Points reset to 0!", "🛠️");
         }
 
-        function filterGallery(category) {
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => {
-                if(btn.dataset.filter === category) {
-                    btn.className = "category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition";
-                } else {
-                    btn.className = "category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition";
-                }
-            });
-
-            const cards = document.querySelectorAll('.gallery-card');
-            cards.forEach(card => {
-                if(category === 'all' || card.dataset.category === category) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
-            });
-        }
-
         function openPreview(data) {
             currentSelectedData = data;
-            document.getElementById('modal-category').textContent = data.category;
+            document.getElementById('modal-category').textContent = data.categoryName;
             document.getElementById('modal-title').textContent = data.title;
             document.getElementById('modal-desc').textContent = data.desc;
             document.getElementById('modal-img').src = data.image;
@@ -576,9 +634,7 @@
             const content = document.getElementById('preview-modal-content');
             modal.classList.add('opacity-0');
             content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
         function selectFormat(format, element) {
@@ -628,9 +684,7 @@
             const content = document.getElementById('topup-modal-content');
             modal.classList.add('opacity-0');
             content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
         function simulateTopUp(points, price) {
@@ -653,7 +707,6 @@
                 btnText.textContent = "Sign In";
             }
 
-            // 這兩行非常關鍵！缺少 input ID 就會當機打不開視窗
             document.getElementById('auth-email').value = '';
             document.getElementById('auth-password').value = '';
 
@@ -671,9 +724,7 @@
             const content = document.getElementById('auth-modal-content');
             modal.classList.add('opacity-0');
             content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
         function showToast(message, icon = "✨") {
@@ -682,12 +733,8 @@
             document.getElementById('toast-icon').textContent = icon;
             
             toast.classList.remove('translate-y-24', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 3500);
+            setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3500);
         }
-
-        updateNavState();
     </script>
 </body>
 </html>
