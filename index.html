@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Littlepawspaper | Printable Coloring Pages</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase JS CDN (引入 Supabase 官方庫) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -45,7 +51,6 @@
         .font-serif {
             font-family: 'Cormorant Garamond', serif;
         }
-        /* 隱藏滾動條但保持可滑動功能 */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -57,17 +62,14 @@
 </head>
 <body class="bg-cream-50 text-sage-700 min-h-screen flex flex-col selection:bg-sage-100">
 
-    <!-- 頂部導覽列 (Navbar) -->
     <header class="sticky top-0 z-40 bg-cream-50/90 backdrop-blur-md border-b border-cream-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-            <!-- Logo -->
             <a href="#" class="font-serif text-xl sm:text-3xl font-bold tracking-wide text-sage-700 italic hover:opacity-80 transition whitespace-nowrap">
                 Littlepawspaper
             </a>
 
-            <!-- 導覽與會員區 -->
             <div class="flex items-center space-x-2 sm:space-x-6">
-                <!-- 未登入狀態按鈕 -->
+                <!-- 未登入狀態 -->
                 <div id="logged-out-nav" class="flex items-center space-x-1.5 sm:space-x-3">
                     <button onclick="openAuthModal('signin')" class="text-xs sm:text-base font-medium px-2.5 py-1.5 sm:px-4 sm:py-2 text-sage-700 hover:text-sage-500 transition whitespace-nowrap">
                         Sign In
@@ -77,7 +79,7 @@
                     </button>
                 </div>
 
-                <!-- 已登入狀態區塊 -->
+                <!-- 已登入狀態 -->
                 <div id="logged-in-nav" class="hidden items-center space-x-2 sm:space-x-4">
                     <div onclick="doubleClickSecretZero(event)" class="cursor-pointer bg-sage-100 hover:bg-sage-200 transition px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full flex items-center space-x-1.5 border border-sage-500/20 shadow-sm" title="Double click to reset points for testing!">
                         <span class="text-sm sm:text-base">🐾</span>
@@ -87,7 +89,7 @@
                     <button onclick="openTopUpModal()" class="bg-sage-500 hover:bg-sage-600 text-white text-[11px] sm:text-sm font-semibold px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full shadow-sm transition whitespace-nowrap">
                         + Top Up
                     </button>
-                    <button onclick="logout()" class="text-xs sm:text-sm text-sage-600 hover:text-red-500 transition font-medium whitespace-nowrap">
+                    <button onclick="handleLogout()" class="text-xs sm:text-sm text-sage-600 hover:text-red-500 transition font-medium whitespace-nowrap">
                         Log Out
                     </button>
                 </div>
@@ -95,162 +97,131 @@
         </div>
     </header>
 
-    <!-- 主視覺區塊 (Hero Section) - 已壓縮手機版高度 -->
+    <!-- 滿版橫幅設計 (w-full bg-cream-100) -->
     <section class="w-full bg-cream-100 py-6 sm:py-16 px-4 text-center border-b border-cream-200">
         <div class="max-w-3xl mx-auto">
-        <h1 class="font-serif text-3xl sm:text-6xl font-bold tracking-tight text-sage-700 mb-2 sm:mb-4">
-            Color Your World <span class="italic font-normal text-sage-500">with Joy</span>
-        </h1>
-        <p class="text-xs sm:text-lg text-sage-600/90 max-w-xl mx-auto font-light leading-relaxed mb-5 px-2">
-            Discover exclusive printable coloring pages. Join today and get <strong class="font-semibold text-sage-700">5 Free Paws Point</strong> to start downloading!
-        </p>
-        <!-- 按鈕加入 whitespace-nowrap 確保單行 -->
-        <div class="flex items-center justify-center gap-2 sm:gap-4">
-            <a href="#gallery" class="whitespace-nowrap bg-sage-500 hover:bg-sage-600 text-white font-medium px-5 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base">
-                Explore Gallery
-            </a>
-            <button onclick="openTopUpModal()" class="whitespace-nowrap bg-white hover:bg-cream-100 text-sage-700 border border-sage-500/30 font-medium px-4 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base flex items-center justify-center space-x-1">
-                <span>Get Paws Point</span>
-                <span>🐾</span>
-            </button>
+            <h1 class="font-serif text-3xl sm:text-6xl font-bold tracking-tight text-sage-700 mb-2 sm:mb-4">
+                Color Your World <span class="italic font-normal text-sage-500">with Joy</span>
+            </h1>
+            <p class="text-xs sm:text-lg text-sage-600/90 max-w-xl mx-auto font-light leading-relaxed mb-5 px-2">
+                Discover exclusive printable coloring pages. Join today and get <strong class="font-semibold text-sage-700">5 Free Paws Point</strong> to start downloading!
+            </p>
+            <div class="flex items-center justify-center gap-2 sm:gap-4">
+                <a href="#gallery" class="whitespace-nowrap bg-sage-500 hover:bg-sage-600 text-white font-medium px-5 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base">
+                    Explore Gallery
+                </a>
+                <button onclick="openTopUpModal()" class="whitespace-nowrap bg-white hover:bg-cream-100 text-sage-700 border border-sage-500/30 font-medium px-4 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base flex items-center justify-center space-x-1">
+                    <span>Get Paws Point</span>
+                    <span>🐾</span>
+                </button>
+            </div>
         </div>
     </section>
 
-    <!-- 主圖庫區塊 (Gallery Section) -->
     <main id="gallery" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow w-full">
-        
-        <!-- 分類標籤滑動欄 - 已優化手機可流暢橫滑 -->
+        <!-- 分類標籤 -->
         <div class="flex flex-wrap items-center justify-center gap-2 mb-8 sm:mb-12">
-            <button onclick="filterGallery('all')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition" data-filter="all">
-                All Designs
-            </button>
-            <button onclick="filterGallery('floral')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="floral">
-                Botanical & Floral
-            </button>
-            <button onclick="filterGallery('cozy')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="cozy">
-                Cozy Life
-            </button>
-            <button onclick="filterGallery('mandala')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="mandala">
-                Mandala & Zen
-            </button>
-            <button onclick="filterGallery('kids')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="kids">
-                Kids Zone
-            </button>
+            <button onclick="filterGallery('all')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition" data-filter="all">All Designs</button>
+            <button onclick="filterGallery('floral')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="floral">Botanical & Floral</button>
+            <button onclick="filterGallery('cozy')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="cozy">Cozy Life</button>
+            <button onclick="filterGallery('mandala')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="mandala">Mandala & Zen</button>
+            <button onclick="filterGallery('kids')" class="category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="kids">Kids Zone</button>
         </div>
 
-        <!-- 填色圖網格 -->
+        <!-- 雙欄圖庫 (手機 2 欄, 桌面 4 欄) -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-            
-            <!-- 卡片 1 -->
+            <!-- Card 1 -->
             <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="floral">
                 <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Vintage Floral Wreath', category: 'Botanical', desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!', cost: 1, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80'})">
                     <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" alt="Floral Wreath" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">🔍 Preview</span>
+                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
                     </div>
                 </div>
-                <div class="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
                     <div>
-                        <div class="text-[10px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Botanical</div>
-                        <h3 class="font-serif text-base sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition">Vintage Floral Wreath</h3>
+                        <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">Botanical</div>
+                        <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">Vintage Floral Wreath</h3>
                     </div>
-                    <div class="mt-3 sm:mt-4 flex items-center justify-between pt-3 border-t border-cream-100">
-                        <span class="text-xs font-medium text-sage-600 flex items-center space-x-1">
+                    <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
+                        <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
                             <span>🐾</span><span>1 Point</span>
                         </span>
-                        <button onclick="openPreview({title: 'Vintage Floral Wreath', category: 'Botanical', desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!', cost: 1, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80'})" class="text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                        </button>
+                        <button onclick="openPreview({title: 'Vintage Floral Wreath', category: 'Botanical', desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!', cost: 1, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80'})" class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 卡片 2 -->
+            <!-- Card 2 -->
             <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="cozy">
                 <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Cat & Coffee Morning', category: 'Cozy Life', desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.', cost: 1, image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80'})">
                     <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80" alt="Cat Coffee" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">🔍 Preview</span>
+                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
                     </div>
                 </div>
-                <div class="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
                     <div>
-                        <div class="text-[10px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Cozy Life</div>
-                        <h3 class="font-serif text-base sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition">Cat & Coffee Morning</h3>
+                        <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">Cozy Life</div>
+                        <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">Cat & Coffee Morning</h3>
                     </div>
-                    <div class="mt-3 sm:mt-4 flex items-center justify-between pt-3 border-t border-cream-100">
-                        <span class="text-xs font-medium text-sage-600 flex items-center space-x-1">
+                    <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
+                        <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
                             <span>🐾</span><span>1 Point</span>
                         </span>
-                        <button onclick="openPreview({title: 'Cat & Coffee Morning', category: 'Cozy Life', desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.', cost: 1, image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80'})" class="text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                        </button>
+                        <button onclick="openPreview({title: 'Cat & Coffee Morning', category: 'Cozy Life', desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.', cost: 1, image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80'})" class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 卡片 3 -->
+            <!-- Card 3 -->
             <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="mandala">
                 <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Zen Garden Mandala', category: 'Mandala & Zen', desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.', cost: 2, image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'})">
-                    <span class="absolute top-3 left-3 z-10 bg-sage-700/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Detailed</span>
+                    <span class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-sage-700/80 backdrop-blur-sm text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider shadow">Detailed</span>
                     <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" alt="Mandala" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">🔍 Preview</span>
+                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
                     </div>
                 </div>
-                <div class="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
                     <div>
-                        <div class="text-[10px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Mandala & Zen</div>
-                        <h3 class="font-serif text-base sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition">Zen Garden Mandala</h3>
+                        <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">Mandala & Zen</div>
+                        <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">Zen Garden Mandala</h3>
                     </div>
-                    <div class="mt-3 sm:mt-4 flex items-center justify-between pt-3 border-t border-cream-100">
-                        <span class="text-xs font-medium text-sage-600 flex items-center space-x-1">
+                    <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
+                        <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
                             <span>🐾</span><span>2 Points</span>
                         </span>
-                        <button onclick="openPreview({title: 'Zen Garden Mandala', category: 'Mandala & Zen', desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.', cost: 2, image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'})" class="text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                        </button>
+                        <button onclick="openPreview({title: 'Zen Garden Mandala', category: 'Mandala & Zen', desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.', cost: 2, image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'})" class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 卡片 4 -->
+            <!-- Card 4 -->
             <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="kids">
                 <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Little Dinosaur Adventure', category: 'Kids Zone', desc: 'Thick, bold lines and simple friendly dinosaur characters designed specially for young kids and toddlers. Fun and easy to color!', cost: 1, image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80'})">
-                    <span class="absolute top-3 left-3 z-10 bg-amber-600/85 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Kids Favorite</span>
+                    <span class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-amber-600/85 backdrop-blur-sm text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider shadow">Kids Favorite</span>
                     <img src="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80" alt="Dino" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">🔍 Preview</span>
+                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">🔍 Preview</span>
                     </div>
                 </div>
-                <div class="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                <div class="p-3 sm:p-5 flex flex-col flex-grow justify-between">
                     <div>
-                        <div class="text-[10px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Kids Zone</div>
-                        <h3 class="font-serif text-base sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition">Little Dinosaur Adventure</h3>
+                        <div class="text-[9px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-0.5 sm:mb-1">Kids Zone</div>
+                        <h3 class="font-serif text-sm sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition line-clamp-1">Little Dinosaur Adventure</h3>
                     </div>
-                    <div class="mt-3 sm:mt-4 flex items-center justify-between pt-3 border-t border-cream-100">
-                        <span class="text-xs font-medium text-sage-600 flex items-center space-x-1">
+                    <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 pt-2 sm:pt-3 border-t border-cream-100">
+                        <span class="text-[11px] sm:text-xs font-medium text-sage-600 flex items-center space-x-1">
                             <span>🐾</span><span>1 Point</span>
                         </span>
-                        <button onclick="openPreview({title: 'Little Dinosaur Adventure', category: 'Kids Zone', desc: 'Thick, bold lines and simple friendly dinosaur characters designed specially for young kids and toddlers. Fun and easy to color!', cost: 1, image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80'})" class="text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                        </button>
+                        <button onclick="openPreview({title: 'Little Dinosaur Adventure', category: 'Kids Zone', desc: 'Thick, bold lines and simple friendly dinosaur characters designed specially for young kids and toddlers. Fun and easy to color!', cost: 1, image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80'})" class="w-full sm:w-auto text-[11px] sm:text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-2.5 py-1.5 rounded-lg transition text-center whitespace-nowrap">View</button>
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 
-    <!-- 底部資訊列 (Footer) - 優化手機版換行與邊距 -->
     <footer class="bg-cream-100 border-t border-cream-200 mt-10 sm:mt-16 py-8 sm:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
             <div>
@@ -266,63 +237,50 @@
         </div>
     </footer>
 
-    <!-- ================= 彈窗元件 (Modals) ================= -->
-
-    <!-- 1. 圖片預覽與下載彈窗 -->
+    <!-- 1. 圖片預覽彈窗 (大螢幕放大) -->
     <div id="preview-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-    <!-- 電腦版最大寬度調大至 md:max-w-4xl -->
-    <div class="bg-white rounded-3xl max-w-2xl md:max-w-4xl w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 max-h-[92vh] flex flex-col" id="preview-modal-content">
-        
-        <!-- 彈窗頂部關閉列 -->
-        <div class="flex items-center justify-between px-5 py-3.5 sm:px-8 sm:py-5 border-b border-cream-100 flex-shrink-0">
-            <span id="modal-category" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sage-500">Category</span>
-            <button onclick="closePreview()" class="w-8 h-8 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs transition">
-                ✕
-            </button>
-        </div>
-
-        <!-- 內容區：電腦版增加內邊距與間距 (md:p-8, md:gap-8) -->
-        <div class="overflow-y-auto p-4 sm:p-8 flex flex-col md:flex-row gap-6 md:gap-8">
-                <div class="w-full md:w-1/2 aspect-[4/5] bg-cream-100 rounded-2xl overflow-hidden relative shadow-inner flex-shrink-0 max-h-[360px] sm:max-h-none">
+        <div class="bg-white rounded-3xl max-w-2xl md:max-w-4xl lg:max-w-5xl w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 max-h-[92vh] flex flex-col" id="preview-modal-content">
+            <div class="flex items-center justify-between px-5 py-3.5 sm:px-8 sm:py-5 border-b border-cream-100 flex-shrink-0">
+                <span id="modal-category" class="text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wider text-sage-500">Category</span>
+                <button onclick="closePreview()" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs md:text-base font-bold transition">✕</button>
+            </div>
+            <div class="overflow-y-auto p-4 sm:p-8 md:p-10 flex flex-col md:flex-row gap-6 md:gap-10">
+                <div class="w-full md:w-1/2 aspect-[4/5] bg-cream-100 rounded-2xl overflow-hidden relative shadow-inner flex-shrink-0 max-h-[380px] md:max-h-none">
                     <img id="modal-img" src="" alt="Preview" class="w-full h-full object-cover">
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15">
-                        <span class="font-serif text-xl sm:text-2xl font-bold tracking-widest text-black rotate-[-30deg]">Littlepawspaper</span>
+                        <span class="font-serif text-xl sm:text-3xl md:text-4xl font-bold tracking-widest text-black rotate-[-30deg]">Littlepawspaper</span>
                     </div>
                 </div>
-
-                <div class="w-full md:w-1/2 flex flex-col justify-between">
+                <div class="w-full md:w-1/2 flex flex-col justify-between space-y-4 md:space-y-6">
                     <div>
-                        <h2 id="modal-title" class="font-serif text-xl sm:text-3xl font-bold text-sage-700 mb-2">Title</h2>
-                        <p id="modal-desc" class="text-xs sm:text-sm text-sage-600/90 leading-relaxed mb-4">Description goes here...</p>
-                        
-                        <div class="flex flex-wrap gap-1.5 mb-4">
-                            <span class="text-[11px] bg-cream-100 text-sage-700 px-2.5 py-1 rounded-lg font-medium">📄 High-Res PDF</span>
-                            <span class="text-[11px] bg-cream-100 text-sage-700 px-2.5 py-1 rounded-lg font-medium">⚡ Instant Download</span>
+                        <h2 id="modal-title" class="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-sage-700 mb-2 md:mb-4">Title</h2>
+                        <p id="modal-desc" class="text-xs sm:text-sm md:text-base lg:text-lg text-sage-600/90 leading-relaxed mb-4 md:mb-6">Description goes here...</p>
+                        <div class="flex flex-wrap gap-2 mb-4 md:mb-6">
+                            <span class="text-[11px] sm:text-xs md:text-sm bg-cream-100 text-sage-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl font-medium">📄 High-Res PDF</span>
+                            <span class="text-[11px] sm:text-xs md:text-sm bg-cream-100 text-sage-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl font-medium">⚡ Instant Download</span>
                         </div>
-
                         <div class="mb-4">
-                            <label class="block text-[10px] font-bold uppercase tracking-wider text-sage-500 mb-1.5">Select Format</label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <label class="flex items-center justify-center p-2.5 rounded-xl border-2 border-sage-500 bg-sage-50/50 cursor-pointer text-xs font-medium text-sage-700 transition format-option" onclick="selectFormat('A4', this)">
+                            <label class="block text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wider text-sage-500 mb-2">Select Format</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center justify-center p-3 md:p-4 rounded-xl border-2 border-sage-500 bg-sage-50/50 cursor-pointer text-xs sm:text-sm md:text-base font-medium text-sage-700 transition format-option" onclick="selectFormat('A4', this)">
                                     <input type="radio" name="paper-format" value="A4" checked class="hidden">
                                     <span>📄 A4 Format</span>
                                 </label>
-                                <label class="flex items-center justify-center p-2.5 rounded-xl border-2 border-cream-200 hover:border-sage-300 cursor-pointer text-xs font-medium text-sage-600 transition format-option" onclick="selectFormat('US Letter', this)">
+                                <label class="flex items-center justify-center p-3 md:p-4 rounded-xl border-2 border-cream-200 hover:border-sage-300 cursor-pointer text-xs sm:text-sm md:text-base font-medium text-sage-600 transition format-option" onclick="selectFormat('US Letter', this)">
                                     <input type="radio" name="paper-format" value="US Letter" class="hidden">
                                     <span>📄 US Letter</span>
                                 </label>
                             </div>
                         </div>
                     </div>
-
-                    <div class="pt-3 border-t border-cream-100 flex items-center justify-between">
+                    <div class="pt-4 border-t border-cream-100 flex items-center justify-between">
                         <div>
-                            <span class="text-[10px] text-sage-500 block">Cost</span>
-                            <span id="modal-cost-display" class="font-bold text-sage-700 text-base sm:text-lg flex items-center space-x-1">
+                            <span class="text-[10px] sm:text-xs md:text-sm text-sage-500 block">Cost</span>
+                            <span id="modal-cost-display" class="font-bold text-sage-700 text-base sm:text-xl md:text-2xl flex items-center space-x-1">
                                 <span>🐾</span><span id="modal-cost-num">1</span> <span>Point</span>
                             </span>
                         </div>
-                        <button onclick="handleDownload()" class="bg-sage-500 hover:bg-sage-600 text-white text-xs sm:text-sm font-medium px-5 py-2.5 rounded-xl shadow transition flex items-center space-x-2 whitespace-nowrap">
+                        <button onclick="handleDownload()" class="bg-sage-500 hover:bg-sage-600 text-white text-xs sm:text-base md:text-lg font-medium px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl shadow-md transition flex items-center space-x-2 whitespace-nowrap">
                             <span>Download Now</span>
                         </button>
                     </div>
@@ -331,127 +289,91 @@
         </div>
     </div>
 
-    
-    <!-- Top Up (Pricing) Modal -->
-    <div id="topup-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeTopUpModal()"></div>
-        
-        <!-- Modal Content Container -->
-        <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0 pointer-events-none">
+    <!-- 2. 儲值點數彈窗 (完美還原版設計) -->
+    <div id="topup-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-xl md:max-w-4xl lg:max-w-5xl w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 relative p-6 sm:p-10 md:p-12" id="topup-modal-content">
             
-            <!-- Modal Panel -->
-            <div id="topup-panel" class="modal-enter relative overflow-hidden rounded-3xl bg-white text-left shadow-2xl sm:my-8 sm:w-full sm:max-w-5xl border border-brand-milktea pointer-events-auto">
-                
-                <!-- Close Button -->
-                <button onclick="closeTopUpModal()" class="absolute top-4 right-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-brand-milktea/50 text-gray-500 hover:text-brand-sage hover:bg-brand-milktea transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+            <button onclick="closeTopUpModal()" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50 hover:bg-cream-100 text-sage-500 flex items-center justify-center text-sm md:text-base font-bold transition">✕</button>
 
-                <div class="px-6 py-12 sm:px-12 sm:py-16 bg-[#FAFAFA]">
-                    <div class="text-center mb-12">
-                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text mb-4">Get More Paws Point 🐾</h2>
-                        <p class="text-gray-600 font-light max-w-2xl mx-auto">Unlock more exclusive coloring pages. Choose the package that fits your creative journey. Secure payment via Stripe.</p>
+            <div class="text-center mb-8 md:mb-12">
+                <h3 class="font-serif text-2xl md:text-4xl lg:text-5xl font-bold text-sage-700 mb-2 md:mb-4">Get More Paws Point 🐾</h3>
+                <p class="text-[11px] sm:text-xs md:text-sm text-sage-600 max-w-lg mx-auto leading-relaxed">Unlock more exclusive coloring pages. Choose the package that fits your creative journey. <br class="hidden sm:block">Secure payment via Stripe.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-10 items-center">
+                <!-- Starter Pack -->
+                <div class="border border-cream-200 rounded-3xl p-6 md:p-8 flex flex-col bg-white">
+                    <div class="text-base md:text-lg font-medium text-sage-700 mb-1">Starter Pack</div>
+                    <div class="mb-5 md:mb-6"><span class="text-3xl md:text-5xl font-bold text-sage-700">$5</span> <span class="text-[10px] md:text-sm text-sage-500 font-medium">USD</span></div>
+                    <div class="bg-cream-50 rounded-2xl py-5 md:py-6 flex flex-col items-center justify-center mb-6 md:mb-8">
+                        <div class="text-xl md:text-2xl font-bold text-sage-700 mb-1">🐾 50</div>
+                        <div class="text-[11px] md:text-sm text-sage-500 font-medium">Paws Point</div>
                     </div>
+                    <button onclick="simulateTopUp(50, 5)" class="w-full border-2 border-sage-500 text-sage-700 hover:bg-sage-500 hover:text-white py-2.5 md:py-3 rounded-full text-sm md:text-base font-bold transition">
+                        Choose Starter
+                    </button>
+                </div>
 
-                    <!-- Pricing Cards Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
-                        
-                        <!-- Starter Pack -->
-                        <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:border-brand-sage hover:shadow-lg transition-all">
-                            <h3 class="text-lg font-medium text-gray-900 mb-2">Starter Pack</h3>
-                            <div class="flex items-baseline mb-4">
-                                <span class="text-4xl font-bold text-brand-text">$5</span>
-                                <span class="text-gray-500 ml-2">USD</span>
-                            </div>
-                            <div class="bg-brand-milktea rounded-xl p-4 mb-8 text-center">
-                                <span class="block text-2xl mb-1">🐾 50</span>
-                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
-                            </div>
-                            <button onclick="mockCheckout('Starter Pack', 5, 50)" class="mt-auto w-full border-2 border-brand-sage text-brand-sage py-3 rounded-full font-medium hover:bg-brand-sage hover:text-white transition-colors">
-                                Choose Starter
-                            </button>
-                        </div>
-
-                        <!-- Popular Pack (Highlighted) -->
-                        <div class="bg-white rounded-2xl border-2 border-brand-sage p-8 flex flex-col shadow-xl relative transform md:-translate-y-4">
-                            <!-- Badge -->
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-sage text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
-                                Most Popular
-                            </div>
-                            
-                            <h3 class="text-lg font-medium text-gray-900 mb-2">Creative Pack</h3>
-                            <div class="flex items-baseline mb-4">
-                                <span class="text-4xl font-bold text-brand-text">$10</span>
-                                <span class="text-gray-500 ml-2">USD</span>
-                            </div>
-                            <div class="bg-brand-sage/10 rounded-xl p-4 mb-8 text-center relative overflow-hidden">
-                                <div class="absolute -right-4 -top-4 w-12 h-12 bg-brand-sage/20 rounded-full blur-xl"></div>
-                                <span class="block text-3xl font-bold text-brand-sage-dark mb-1">🐾 120</span>
-                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
-                                <span class="block text-xs text-brand-sage mt-2 font-medium">+20 Bonus Points!</span>
-                            </div>
-                            <button onclick="mockCheckout('Creative Pack', 10, 120)" class="mt-auto w-full bg-brand-sage text-white py-3 rounded-full font-medium hover:bg-brand-sage-dark transition-colors shadow-md">
-                                Choose Creative
-                            </button>
-                        </div>
-
-                        <!-- Value Pack -->
-                        <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:border-brand-sage hover:shadow-lg transition-all">
-                            <h3 class="text-lg font-medium text-gray-900 mb-2">Artist Pack</h3>
-                            <div class="flex items-baseline mb-4">
-                                <span class="text-4xl font-bold text-brand-text">$20</span>
-                                <span class="text-gray-500 ml-2">USD</span>
-                            </div>
-                            <div class="bg-brand-milktea rounded-xl p-4 mb-8 text-center">
-                                <span class="block text-2xl mb-1">🐾 280</span>
-                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
-                                <span class="block text-xs text-gray-500 mt-2 font-medium">+80 Bonus Points!</span>
-                            </div>
-                            <button onclick="mockCheckout('Artist Pack', 20, 280)" class="mt-auto w-full border-2 border-brand-sage text-brand-sage py-3 rounded-full font-medium hover:bg-brand-sage hover:text-white transition-colors">
-                                Choose Artist
-                            </button>
-                        </div>
-
+                <!-- Creative Pack (中心凸顯) -->
+                <div class="border-2 border-sage-500 rounded-3xl p-6 md:p-8 flex flex-col bg-white relative shadow-xl transform md:-translate-y-4">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-sage-500 text-white text-[9px] md:text-[11px] font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
+                        Most Popular
                     </div>
-                    
-                    <!-- Secure Payment Info -->
-                    <div class="mt-12 text-center flex flex-col items-center justify-center">
-                        <p class="text-xs text-gray-400 mb-3 uppercase tracking-wider font-medium flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            Guaranteed Safe & Secure Checkout
-                        </p>
-                        <!-- Fake payment icons using styled divs (in real site, use SVG logos) -->
-                        <div class="flex space-x-2">
-                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold text-blue-900">VISA</div>
-                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center">
-                                <div class="flex -space-x-2">
-                                    <div class="w-4 h-4 rounded-full bg-red-500 mix-blend-multiply opacity-80"></div>
-                                    <div class="w-4 h-4 rounded-full bg-yellow-400 mix-blend-multiply opacity-80"></div>
-                                </div>
-                            </div>
-                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold">Pay</div>
-                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold">G Pay</div>
-                        </div>
+                    <div class="text-base md:text-lg font-medium text-sage-700 mb-1 mt-2">Creative Pack</div>
+                    <div class="mb-5 md:mb-6"><span class="text-3xl md:text-5xl font-bold text-sage-700">$10</span> <span class="text-[10px] md:text-sm text-sage-500 font-medium">USD</span></div>
+                    <div class="bg-sage-50 rounded-2xl py-5 md:py-6 flex flex-col items-center justify-center mb-6 md:mb-8">
+                        <div class="text-xl md:text-3xl font-bold text-sage-700 mb-1">🐾 120</div>
+                        <div class="text-[11px] md:text-sm text-sage-500 font-medium mb-1">Paws Point</div>
+                        <div class="text-[9px] md:text-xs font-bold text-sage-600/80">+20 Bonus Points!</div>
                     </div>
+                    <button onclick="simulateTopUp(120, 10)" class="w-full bg-sage-500 text-white hover:bg-sage-600 py-2.5 md:py-3 rounded-full text-sm md:text-base font-bold transition shadow-md">
+                        Choose Creative
+                    </button>
+                </div>
+
+                <!-- Artist Pack -->
+                <div class="border border-cream-200 rounded-3xl p-6 md:p-8 flex flex-col bg-white">
+                    <div class="text-base md:text-lg font-medium text-sage-700 mb-1">Artist Pack</div>
+                    <div class="mb-5 md:mb-6"><span class="text-3xl md:text-5xl font-bold text-sage-700">$20</span> <span class="text-[10px] md:text-sm text-sage-500 font-medium">USD</span></div>
+                    <div class="bg-cream-50 rounded-2xl py-5 md:py-6 flex flex-col items-center justify-center mb-6 md:mb-8">
+                        <div class="text-xl md:text-2xl font-bold text-sage-700 mb-1">🐾 280</div>
+                        <div class="text-[11px] md:text-sm text-sage-500 font-medium mb-1">Paws Point</div>
+                        <div class="text-[9px] md:text-xs font-bold text-sage-500/80">+80 Bonus Points!</div>
+                    </div>
+                    <button onclick="simulateTopUp(280, 20)" class="w-full border-2 border-sage-500 text-sage-700 hover:bg-sage-500 hover:text-white py-2.5 md:py-3 rounded-full text-sm md:text-base font-bold transition">
+                        Choose Artist
+                    </button>
+                </div>
+            </div>
+
+            <!-- 底部安全付款圖示 -->
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 text-[9px] md:text-[11px] text-sage-500 font-bold uppercase tracking-widest mb-4">
+                    <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <span>Guaranteed Safe & Secure Checkout</span>
+                </div>
+                <div class="flex justify-center space-x-2">
+                    <div class="border border-cream-200 rounded px-3 py-1.5 text-[10px] font-bold text-blue-800 bg-white shadow-sm">VISA</div>
+                    <div class="border border-cream-200 rounded px-3 py-1.5 flex items-center justify-center bg-white shadow-sm">
+                        <div class="w-3 h-3 rounded-full bg-red-500 mr-[-4px] opacity-90"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-400 opacity-90 mix-blend-multiply"></div>
+                    </div>
+                    <div class="border border-cream-200 rounded px-3 py-1.5 text-[10px] font-bold text-gray-700 bg-white shadow-sm">Pay</div>
+                    <div class="border border-cream-200 rounded px-3 py-1.5 text-[10px] font-bold text-gray-700 bg-white shadow-sm">G Pay</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 3. 登入/註冊彈窗 -->
+    <!-- 3. 登入/註冊彈窗 (修復了缺少 id="auth-email" 的問題) -->
     <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 p-6 sm:p-8" id="auth-modal-content">
             <div class="flex items-center justify-between mb-5">
                 <h3 id="auth-modal-title" class="font-serif text-xl sm:text-2xl font-bold text-sage-700">Sign In to Littlepawspaper</h3>
-                <button onclick="closeAuthModal()" class="w-7 h-7 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs transition">
-                    ✕
-                </button>
+                <button onclick="closeAuthModal()" class="w-7 h-7 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs transition">✕</button>
             </div>
 
-            <button onclick="mockLogin()" class="w-full border border-cream-200 hover:bg-cream-50 text-sage-700 font-medium py-2.5 sm:py-3 rounded-xl transition flex items-center justify-center space-x-2 sm:space-x-3 mb-4 shadow-sm text-xs sm:text-sm">
+            <button type="button" onclick="handleGoogleAuth()" class="w-full border border-cream-200 hover:bg-cream-50 text-sage-700 font-medium py-2.5 sm:py-3 rounded-xl transition flex items-center justify-center space-x-2 sm:space-x-3 mb-4 shadow-sm text-xs sm:text-sm">
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
                 <span>Continue with Google</span>
             </button>
@@ -462,14 +384,15 @@
                 <div class="flex-grow border-t border-cream-200"></div>
             </div>
 
-            <form onsubmit="event.preventDefault(); mockLogin();" class="space-y-3 sm:space-y-4 mt-2">
+            <!-- 注意這裡：表單連結了 handleEmailAuth 並補回了正確的 ID -->
+            <form onsubmit="handleEmailAuth(event)" class="space-y-3 sm:space-y-4 mt-2">
                 <div>
                     <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sage-500 mb-1">Email Address</label>
-                    <input type="email" required placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-sage-500 text-xs sm:text-sm">
+                    <input type="email" id="auth-email" required placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-sage-500 text-xs sm:text-sm">
                 </div>
                 <div>
                     <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sage-500 mb-1">Password</label>
-                    <input type="password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-sage-500 text-xs sm:text-sm">
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-sage-500 text-xs sm:text-sm">
                 </div>
                 <button type="submit" class="w-full bg-sage-500 hover:bg-sage-600 text-white font-medium py-2.5 sm:py-3 rounded-xl shadow transition text-xs sm:text-sm">
                     <span id="auth-submit-text">Sign In</span>
@@ -484,13 +407,108 @@
         <span id="toast-msg">Notification message</span>
     </div>
 
-    <!-- JavaScript 互動邏輯 -->
     <script>
+        // ==========================================
+        // 🔹 SUPABASE 設定區 (請在此填入你的真實 Key)
+        // ==========================================
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
+        
+        // 將變數名稱從 supabase 改為 supabaseClient，避免與官方 CDN 衝突
+        let supabaseClient = null;
+        
+        // 只有當你填入真實 URL 時才會啟用 Supabase，否則依然提供單機預覽體驗
+        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE') {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        // ==========================================
+        // 網頁狀態變數
+        // ==========================================
         let isLoggedIn = false;
-        let userPoints = 5;
+        let userPoints = 0; 
+        let currentAuthMode = 'signin'; 
         let currentSelectedData = null;
         let selectedPaperFormat = 'A4';
 
+        // 頁面載入時檢查是否已透過 Supabase 登入
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (supabaseClient) {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    isLoggedIn = true;
+                    userPoints = 5; // 未來會從資料庫拉取真實點數
+                    updateNavState();
+                }
+            }
+        });
+
+        // ==========================================
+        // 核心認證邏輯 (Auth)
+        // ==========================================
+        async function handleGoogleAuth() {
+            if (supabaseClient) {
+                const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
+                if (error) {
+                    showToast(error.message, "⚠️");
+                }
+            } else {
+                mockLoginSuccess();
+            }
+        }
+
+        async function handleEmailAuth(event) {
+            event.preventDefault(); 
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const btnText = document.getElementById('auth-submit-text');
+            
+            btnText.textContent = "Processing...";
+
+            if (supabaseClient) {
+                if (currentAuthMode === 'signup') {
+                    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                    if (error) {
+                        showToast(error.message, "⚠️");
+                    } else {
+                        showToast("Check your email to verify your account!", "📧");
+                        closeAuthModal();
+                    }
+                } else {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) {
+                        showToast("Invalid login credentials.", "⚠️");
+                    } else {
+                        mockLoginSuccess(); 
+                    }
+                }
+            } else {
+                setTimeout(() => mockLoginSuccess(), 800);
+            }
+            
+            btnText.textContent = currentAuthMode === 'signup' ? "Sign Up" : "Sign In";
+        }
+
+        async function handleLogout() {
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut();
+            }
+            isLoggedIn = false;
+            updateNavState();
+            showToast("Logged out successfully.", "👋");
+        }
+
+        function mockLoginSuccess() {
+            isLoggedIn = true;
+            userPoints = 5; 
+            updateNavState();
+            closeAuthModal();
+            showToast("Welcome! Received 5 Free Points 🐾", "🎉");
+        }
+
+        // ==========================================
+        // UI 更新與互動邏輯
+        // ==========================================
         function updateNavState() {
             const loggedOutNav = document.getElementById('logged-out-nav');
             const loggedInNav = document.getElementById('logged-in-nav');
@@ -510,20 +528,6 @@
             }
         }
 
-        function mockLogin() {
-            isLoggedIn = true;
-            userPoints = 5;
-            updateNavState();
-            closeAuthModal();
-            showToast("Welcome! Received 5 Free Points 🐾", "🎉");
-        }
-
-        function logout() {
-            isLoggedIn = false;
-            updateNavState();
-            showToast("Logged out successfully.", "👋");
-        }
-
         function doubleClickSecretZero(e) {
             userPoints = 0;
             updateNavState();
@@ -534,9 +538,9 @@
             const buttons = document.querySelectorAll('.category-btn');
             buttons.forEach(btn => {
                 if(btn.dataset.filter === category) {
-                    btn.className = "category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition";
+                    btn.className = "category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition";
                 } else {
-                    btn.className = "category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition";
+                    btn.className = "category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition";
                 }
             });
 
@@ -637,15 +641,21 @@
         }
 
         function openAuthModal(mode) {
+            currentAuthMode = mode;
             const title = document.getElementById('auth-modal-title');
             const btnText = document.getElementById('auth-submit-text');
+            
             if (mode === 'signup') {
                 title.textContent = "Create Account";
-                btnText.textContent = "Sign Up & Get 5 Points";
+                btnText.textContent = "Sign Up";
             } else {
                 title.textContent = "Sign In to Littlepawspaper";
                 btnText.textContent = "Sign In";
             }
+
+            // 這兩行非常關鍵！缺少 input ID 就會當機打不開視窗
+            document.getElementById('auth-email').value = '';
+            document.getElementById('auth-password').value = '';
 
             const modal = document.getElementById('auth-modal');
             const content = document.getElementById('auth-modal-content');
