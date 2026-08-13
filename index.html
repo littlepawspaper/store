@@ -375,6 +375,8 @@
                 desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!',
                 cost: 1,
                 image: 'https://pudkxqaerzjyqochbbeu.supabase.co/storage/v1/object/public/thumbnails/nekocafe-k001-01.png?auto=format&fit=crop&w=800&q=80',
+                    pdfA4: 'nekocafe_a4_k001.pdf',
+                    pdfUS: 'nekocafe_us_k001.pdf',
                 badge: null
             },
             {
@@ -718,26 +720,77 @@ async function syncUserProfile(user) {
             element.querySelector('input').checked = true;
         }
 
-        function handleDownload() {
-            if (!isLoggedIn) {
-                closePreview();
-                openAuthModal('signin');
-                showToast("Please sign in to download.", "🔒");
-                return;
-            }
+       async function handleDownload() {
 
-            if (userPoints < currentSelectedData.cost) {
-                closePreview();
-                openTopUpModal();
-                showToast("Not enough Paws Points! Please top up.", "💡");
-                return;
-            }
+    // 1. 必須登入
+    if (!isLoggedIn) {
+        closePreview();
+        openAuthModal('signin');
+        showToast("Please sign in to download.", "🔒");
+        return;
+    }
 
-            userPoints -= currentSelectedData.cost;
-            updateNavState();
-            closePreview();
-            showToast(`Downloading "${currentSelectedData.title}" (${selectedPaperFormat}).`, "📥");
+    // 2. 檢查 Points
+    if (userPoints < currentSelectedData.cost) {
+        closePreview();
+        openTopUpModal();
+        showToast("Not enough Paws Points! Please top up.", "💡");
+        return;
+    }
+
+    // 3. 根據使用者選擇 A4 / US Letter
+    const pdfPath =
+        selectedPaperFormat === 'A4'
+            ? currentSelectedData.pdfA4
+            : currentSelectedData.pdfUS;
+
+    if (!pdfPath) {
+        showToast("PDF file not found.", "⚠️");
+        return;
+    }
+
+    try {
+
+        showToast("Preparing your download...", "📄");
+
+        // 4. 從 Private Bucket 產生 Signed URL
+        const { data, error } = await supabaseClient
+            .storage
+            .from('pdfs')
+            .createSignedUrl(pdfPath, 60);
+
+        if (error) {
+            console.error("Signed URL error:", error);
+            showToast("Unable to prepare download.", "⚠️");
+            return;
         }
+
+        // 5. PDF 成功取得後才扣 Point
+        userPoints -= currentSelectedData.cost;
+        updateNavState();
+
+        // 6. 開始下載
+        const link = document.createElement('a');
+        link.href = data.signedUrl;
+        link.download = pdfPath.split('/').pop();
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        closePreview();
+
+        showToast(
+            `Downloaded "${currentSelectedData.title}" (${selectedPaperFormat}).`,
+            "📥"
+        );
+
+    } catch (error) {
+
+        console.error("Download error:", error);
+        showToast("Download failed. Please try again.", "⚠️");
+
+    }
+}
 
         function openTopUpModal() {
             const modal = document.getElementById('topup-modal');
