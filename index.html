@@ -3,937 +3,618 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Littlepawspaper | Premium Coloring Pages</title>
-    
-    <!-- Google Fonts: Playfair Display for elegant headings, Inter for clean body text -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
+    <title>Littlepawspaper | Printable Coloring Pages</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'brand-sage': '#8FA382',     /* Sage Green */
-                        'brand-sage-dark': '#738766',
-                        'brand-milktea': '#F4EFEA',  /* Light Milk Tea */
-                        'brand-milktea-dark': '#E5DCD1',
-                        'brand-text': '#333333',
+                        sage: {
+                            50: '#F4F7F4',
+                            100: '#E3EBE3',
+                            500: '#7C9082',
+                            600: '#64756A',
+                            700: '#4D5952'
+                        },
+                        cream: {
+                            50: '#FAF8F5',
+                            100: '#F2EDE4',
+                            200: '#E5DCB',
+                            300: '#D9CEBD'
+                        }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-
     <style>
         body {
-            background-color: #FFFFFF;
-            color: #333333;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAF8F5;
+            color: #4D5952;
         }
-        
-        .card-hover {
-            transition: all 0.3s ease;
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
         }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px -10px rgba(143, 163, 130, 0.3);
+        /* 隱藏滾動條但保持可滑動功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-
-        /* Custom scrollbar for an elegant touch */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #F4EFEA; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #8FA382; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #738766; 
-        }
-
-        /* Toast Animation */
-        @keyframes slideInUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .toast-animate {
-            animation: slideInUp 0.3s ease-out forwards;
-        }
-
-        /* Modal Animation */
-        .modal-enter {
-            opacity: 0;
-            transform: scale(0.95);
-            transition: all 0.3s ease-out;
-        }
-        .modal-enter-active {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .modal-leave {
-            opacity: 1;
-            transform: scale(1);
-            transition: all 0.2s ease-in;
-        }
-        .modal-leave-active {
-            opacity: 0;
-            transform: scale(0.95);
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="bg-cream-50 text-sage-700 min-h-screen flex flex-col selection:bg-sage-100">
 
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-brand-milktea-dark">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center cursor-pointer">
-                    <span class="font-serif italic font-bold text-2xl text-brand-sage">Littlepawspaper</span>
+    <!-- 頂部導覽列 (Navbar) -->
+    <header class="sticky top-0 z-40 bg-cream-50/90 backdrop-blur-md border-b border-cream-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="font-serif text-xl sm:text-3xl font-bold tracking-wide text-sage-700 italic hover:opacity-80 transition whitespace-nowrap">
+                Littlepawspaper
+            </a>
+
+            <!-- 導覽與會員區 -->
+            <div class="flex items-center space-x-2 sm:space-x-6">
+                <!-- 未登入狀態按鈕 -->
+                <div id="logged-out-nav" class="flex items-center space-x-1.5 sm:space-x-3">
+                    <button onclick="openAuthModal('signin')" class="text-xs sm:text-base font-medium px-2.5 py-1.5 sm:px-4 sm:py-2 text-sage-700 hover:text-sage-500 transition whitespace-nowrap">
+                        Sign In
+                    </button>
+                    <button onclick="openAuthModal('signup')" class="text-xs sm:text-base bg-sage-500 hover:bg-sage-600 text-white font-medium px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-sm transition whitespace-nowrap">
+                        Sign Up
+                    </button>
                 </div>
-                
-                <!-- Right Side: Navigation & Auth -->
-                <div class="flex items-center space-x-4 sm:space-x-6">
-                    
-                    <!-- [Logged OUT State] -->
-                    <div id="logged-out-nav" class="flex items-center space-x-3 sm:space-x-4">
-                        <button onclick="openAuthModal('login')" class="text-sm font-medium text-brand-text hover:text-brand-sage transition-colors">
-                            Sign In
-                        </button>
-                        <button onclick="openAuthModal('register')" class="bg-brand-sage text-white px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-sm font-medium hover:bg-brand-sage-dark transition-colors shadow-sm">
-                            Sign Up
-                        </button>
-                    </div>
 
-                    <!-- [Logged IN State] (Hidden by default) -->
-                    <div id="logged-in-nav" class="hidden items-center space-x-4 sm:space-x-6">
-                        <!-- Paws Point Display -->
-                        <div ondblclick="testEmptyPoints()" class="hidden sm:flex items-center bg-brand-milktea px-4 py-2 rounded-full border border-brand-milktea-dark cursor-help transition-transform hover:scale-105" title="測試秘技：雙擊清空點數">
-                            <span class="text-xl mr-2">🐾</span>
-                            <span id="nav-points-display" class="font-medium text-sm text-brand-text">5 Paws Point</span>
-                        </div>
-                        
-                        <!-- Top up button -->
-                        <button onclick="openTopUpModal()" class="text-sm font-medium text-brand-sage hover:text-brand-sage-dark transition-colors hidden sm:block">
-                            Top Up
-                        </button>
-
-                        <!-- User Profile Placeholder -->
-                        <button class="w-10 h-10 rounded-full bg-brand-sage flex items-center justify-center text-white font-serif font-bold hover:bg-brand-sage-dark transition-colors shadow-sm">
-                            J
-                        </button>
+                <!-- 已登入狀態區塊 -->
+                <div id="logged-in-nav" class="hidden items-center space-x-2 sm:space-x-4">
+                    <div onclick="doubleClickSecretZero(event)" class="cursor-pointer bg-sage-100 hover:bg-sage-200 transition px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full flex items-center space-x-1.5 border border-sage-500/20 shadow-sm" title="Double click to reset points for testing!">
+                        <span class="text-sm sm:text-base">🐾</span>
+                        <span id="user-points" class="font-bold text-sage-700 text-xs sm:text-base">5</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-sage-600 hidden sm:inline">Paws Point</span>
                     </div>
+                    <button onclick="openTopUpModal()" class="bg-sage-500 hover:bg-sage-600 text-white text-[11px] sm:text-sm font-semibold px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full shadow-sm transition whitespace-nowrap">
+                        + Top Up
+                    </button>
+                    <button onclick="logout()" class="text-xs sm:text-sm text-sage-600 hover:text-red-500 transition font-medium whitespace-nowrap">
+                        Log Out
+                    </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow">
-        <!-- Hero Banner -->
-        <section class="bg-brand-milktea py-16 sm:py-24">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-brand-text font-bold mb-6">
-                    Color Your World with <span class="text-brand-sage italic">Joy</span>
-                </h1>
-                <p class="mt-4 text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto font-light mb-8">
-                    Discover exclusive, high-quality printable coloring pages. <br class="hidden sm:block">
-                    Join today and get <strong class="text-brand-sage font-semibold">5 Free Paws Point</strong> to start downloading!
-                </p>
-                <div class="flex justify-center space-x-4">
-                    <button class="bg-brand-sage text-white px-8 py-3 rounded-full font-medium hover:bg-brand-sage-dark transition-colors shadow-sm">
-                        Explore Gallery
-                    </button>
-                    <button onclick="openTopUpModal()" class="bg-white text-brand-sage border border-brand-sage px-8 py-3 rounded-full font-medium hover:bg-gray-50 transition-colors shadow-sm">
-                        Get Paws Point 🐾
-                    </button>
-                </div>
-            </div>
-        </section>
+    <!-- 主視覺區塊 (Hero Section) - 已壓縮手機版高度 -->
+    <section class="relative py-6 sm:py-16 px-4 text-center max-w-3xl mx-auto">
+        <h1 class="font-serif text-3xl sm:text-6xl font-bold tracking-tight text-sage-700 mb-2 sm:mb-4">
+            Color Your World <span class="italic font-normal text-sage-500">with Joy</span>
+        </h1>
+        <p class="text-xs sm:text-lg text-sage-600/90 max-w-xl mx-auto font-light leading-relaxed mb-5 px-2">
+            Discover exclusive printable coloring pages. Join today and get <strong class="font-semibold text-sage-700">5 Free Paws Point</strong> to start downloading!
+        </p>
+        <!-- 按鈕加入 whitespace-nowrap 確保單行 -->
+        <div class="flex items-center justify-center gap-2 sm:gap-4">
+            <a href="#gallery" class="whitespace-nowrap bg-sage-500 hover:bg-sage-600 text-white font-medium px-5 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base">
+                Explore Gallery
+            </a>
+            <button onclick="openTopUpModal()" class="whitespace-nowrap bg-white hover:bg-cream-100 text-sage-700 border border-sage-500/30 font-medium px-4 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base flex items-center justify-center space-x-1">
+                <span>Get Paws Point</span>
+                <span>🐾</span>
+            </button>
+        </div>
+    </section>
 
-        <!-- Gallery Section -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <!-- Filter Tags -->
-            <div class="flex overflow-x-auto pb-4 mb-8 space-x-3 hide-scrollbar justify-start sm:justify-center" id="filter-container">
-                <button data-filter="all" class="filter-btn whitespace-nowrap px-6 py-2 rounded-full bg-brand-sage text-white text-sm font-medium transition-colors">All Designs</button>
-                <button data-filter="botanical" class="filter-btn whitespace-nowrap px-6 py-2 rounded-full bg-brand-milktea text-gray-600 hover:bg-brand-milktea-dark text-sm font-medium transition-colors">Botanical & Floral</button>
-                <button data-filter="cozy" class="filter-btn whitespace-nowrap px-6 py-2 rounded-full bg-brand-milktea text-gray-600 hover:bg-brand-milktea-dark text-sm font-medium transition-colors">Cozy Animals</button>
-                <button data-filter="kids" class="filter-btn whitespace-nowrap px-6 py-2 rounded-full bg-brand-milktea text-gray-600 hover:bg-brand-milktea-dark text-sm font-medium transition-colors">Kids Zone</button>
-                <button data-filter="mandalas" class="filter-btn whitespace-nowrap px-6 py-2 rounded-full bg-brand-milktea text-gray-600 hover:bg-brand-milktea-dark text-sm font-medium transition-colors">Mandalas</button>
-                <button data-filter="seasonal" class="filter-btn whitespace-nowrap px-6 py-2 rounded-full bg-brand-milktea text-gray-600 hover:bg-brand-milktea-dark text-sm font-medium transition-colors">Seasonal</button>
-            </div>
+    <!-- 主圖庫區塊 (Gallery Section) -->
+    <main id="gallery" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow w-full">
+        
+        <!-- 分類標籤滑動欄 - 已優化手機可流暢橫滑 -->
+        <div class="flex items-center overflow-x-auto pb-3 mb-6 sm:mb-10 gap-2 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:justify-center">
+            <button onclick="filterGallery('all')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition" data-filter="all">
+                All Designs
+            </button>
+            <button onclick="filterGallery('floral')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="floral">
+                Botanical & Floral
+            </button>
+            <button onclick="filterGallery('cozy')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="cozy">
+                Cozy Life
+            </button>
+            <button onclick="filterGallery('mandala')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="mandala">
+                Mandala & Zen
+            </button>
+            <button onclick="filterGallery('kids')" class="category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition" data-filter="kids">
+                Kids Zone
+            </button>
+        </div>
 
-            <!-- Product Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="product-grid">
-                
-                <!-- Product Card 1 -->
-                <div data-category="botanical" class="product-card group bg-white rounded-2xl border border-brand-milktea overflow-hidden card-hover">
-                    <div class="aspect-w-3 aspect-h-4 bg-brand-milktea relative overflow-hidden cursor-pointer" onclick="openModal('Vintage Floral Wreath', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Floral+Wreath\\nSketch', 'Botanical', 1)">
-                        <!-- Mockup Image: Placeholder styled like a sketch -->
-                        <img src="https://placehold.co/600x800/F4EFEA/8FA382?text=Floral+Wreath\nSketch" alt="Floral Wreath" class="w-full h-full object-cover p-4 transition-transform duration-500 group-hover:scale-105">
-                        <!-- Watermark Overlay Simulation -->
-                        <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                            <span class="font-serif font-bold text-3xl rotate-[-45deg] tracking-widest">Littlepawspaper</span>
-                        </div>
-                        <!-- Hover Overlay (Click to view) -->
-                        <div class="absolute inset-0 bg-brand-sage-dark/0 group-hover:bg-brand-sage-dark/10 transition-colors flex items-center justify-center pointer-events-none">
-                            <span class="bg-white/90 text-brand-sage font-medium px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-sm">🔍 Preview</span>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-xs text-brand-sage font-medium uppercase tracking-wider mb-1">Botanical</p>
-                        <h3 class="font-serif text-lg font-semibold text-brand-text mb-3 cursor-pointer hover:text-brand-sage transition-colors" onclick="openModal('Vintage Floral Wreath', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Floral+Wreath\\nSketch', 'Botanical', 1)">Vintage Floral Wreath</h3>
-                        <div class="flex items-center justify-between mt-4">
-                            <span class="text-sm font-medium flex items-center text-gray-700">
-                                🐾 1 Point
-                            </span>
-                            <button onclick="mockDownload('Vintage Floral Wreath', 1)" class="w-8 h-8 rounded-full bg-brand-milktea flex items-center justify-center text-brand-sage hover:bg-brand-sage hover:text-white transition-colors" title="Quick Download">
-                                <!-- Download Icon SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 2 -->
-                <div data-category="cozy" class="product-card group bg-white rounded-2xl border border-brand-milktea overflow-hidden card-hover">
-                    <div class="aspect-w-3 aspect-h-4 bg-brand-milktea relative overflow-hidden cursor-pointer" onclick="openModal('Cozy Sleeping Cat', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Sleeping+Cat\\nSketch', 'Cozy Animals', 1)">
-                        <img src="https://placehold.co/600x800/F4EFEA/8FA382?text=Sleeping+Cat\nSketch" alt="Sleeping Cat" class="w-full h-full object-cover p-4 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                            <span class="font-serif font-bold text-3xl rotate-[-45deg] tracking-widest">Littlepawspaper</span>
-                        </div>
-                        <div class="absolute inset-0 bg-brand-sage-dark/0 group-hover:bg-brand-sage-dark/10 transition-colors flex items-center justify-center pointer-events-none">
-                            <span class="bg-white/90 text-brand-sage font-medium px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-sm">🔍 Preview</span>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-xs text-brand-sage font-medium uppercase tracking-wider mb-1">Cozy Animals</p>
-                        <h3 class="font-serif text-lg font-semibold text-brand-text mb-3 cursor-pointer hover:text-brand-sage transition-colors" onclick="openModal('Cozy Sleeping Cat', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Sleeping+Cat\\nSketch', 'Cozy Animals', 1)">Cozy Sleeping Cat</h3>
-                        <div class="flex items-center justify-between mt-4">
-                            <span class="text-sm font-medium flex items-center text-gray-700">
-                                🐾 1 Point
-                            </span>
-                            <button onclick="mockDownload('Cozy Sleeping Cat', 1)" class="w-8 h-8 rounded-full bg-brand-milktea flex items-center justify-center text-brand-sage hover:bg-brand-sage hover:text-white transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 3 (Premium) -->
-                <div data-category="mandalas" class="product-card group bg-white rounded-2xl border border-brand-milktea overflow-hidden card-hover">
-                    <div class="aspect-w-3 aspect-h-4 bg-brand-milktea relative overflow-hidden cursor-pointer" onclick="openModal('Zen Garden Mandala', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Zen+Mandala\\nDetailed', 'Mandalas', 2)">
-                        <img src="https://placehold.co/600x800/F4EFEA/8FA382?text=Zen+Mandala\nDetailed" alt="Zen Mandala" class="w-full h-full object-cover p-4 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                            <span class="font-serif font-bold text-3xl rotate-[-45deg] tracking-widest">Littlepawspaper</span>
-                        </div>
-                        <!-- Premium Badge -->
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-brand-sage-dark shadow-sm">
-                            Detailed
-                        </div>
-                        <div class="absolute inset-0 bg-brand-sage-dark/0 group-hover:bg-brand-sage-dark/10 transition-colors flex items-center justify-center pointer-events-none">
-                            <span class="bg-white/90 text-brand-sage font-medium px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-sm">🔍 Preview</span>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-xs text-brand-sage font-medium uppercase tracking-wider mb-1">Mandalas</p>
-                        <h3 class="font-serif text-lg font-semibold text-brand-text mb-3 cursor-pointer hover:text-brand-sage transition-colors" onclick="openModal('Zen Garden Mandala', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Zen+Mandala\\nDetailed', 'Mandalas', 2)">Zen Garden Mandala</h3>
-                        <div class="flex items-center justify-between mt-4">
-                            <span class="text-sm font-medium flex items-center text-gray-700">
-                                🐾 2 Points
-                            </span>
-                            <button onclick="mockDownload('Zen Garden Mandala', 2)" class="w-8 h-8 rounded-full bg-brand-milktea flex items-center justify-center text-brand-sage hover:bg-brand-sage hover:text-white transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 4 -->
-                <div data-category="seasonal" class="product-card group bg-white rounded-2xl border border-brand-milktea overflow-hidden card-hover">
-                    <div class="aspect-w-3 aspect-h-4 bg-brand-milktea relative overflow-hidden cursor-pointer" onclick="openModal('Fairy Mushroom House', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Mushroom+House\\nCute', 'Seasonal', 1)">
-                        <img src="https://placehold.co/600x800/F4EFEA/8FA382?text=Mushroom+House\nCute" alt="Mushroom House" class="w-full h-full object-cover p-4 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                            <span class="font-serif font-bold text-3xl rotate-[-45deg] tracking-widest">Littlepawspaper</span>
-                        </div>
-                        <div class="absolute inset-0 bg-brand-sage-dark/0 group-hover:bg-brand-sage-dark/10 transition-colors flex items-center justify-center pointer-events-none">
-                            <span class="bg-white/90 text-brand-sage font-medium px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-sm">🔍 Preview</span>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-xs text-brand-sage font-medium uppercase tracking-wider mb-1">Seasonal</p>
-                        <h3 class="font-serif text-lg font-semibold text-brand-text mb-3 cursor-pointer hover:text-brand-sage transition-colors" onclick="openModal('Fairy Mushroom House', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Mushroom+House\\nCute', 'Seasonal', 1)">Fairy Mushroom House</h3>
-                        <div class="flex items-center justify-between mt-4">
-                            <span class="text-sm font-medium flex items-center text-gray-700">
-                                🐾 1 Point
-                            </span>
-                            <button onclick="mockDownload('Fairy Mushroom House', 1)" class="w-8 h-8 rounded-full bg-brand-milktea flex items-center justify-center text-brand-sage hover:bg-brand-sage hover:text-white transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 5 (Kids Zone) -->
-                <div data-category="kids" class="product-card group bg-white rounded-2xl border border-brand-milktea overflow-hidden card-hover">
-                    <div class="aspect-w-3 aspect-h-4 bg-brand-milktea relative overflow-hidden cursor-pointer" onclick="openModal('Happy Little Dinosaur', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Cute+Dino\\nKids', 'Kids Zone', 1)">
-                        <img src="https://placehold.co/600x800/F4EFEA/8FA382?text=Cute+Dino\nKids" alt="Cute Dinosaur" class="w-full h-full object-cover p-4 transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                            <span class="font-serif font-bold text-3xl rotate-[-45deg] tracking-widest">Littlepawspaper</span>
-                        </div>
-                        <div class="absolute inset-0 bg-brand-sage-dark/0 group-hover:bg-brand-sage-dark/10 transition-colors flex items-center justify-center pointer-events-none">
-                            <span class="bg-white/90 text-brand-sage font-medium px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-sm">🔍 Preview</span>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <p class="text-xs text-brand-sage font-medium uppercase tracking-wider mb-1">Kids Zone</p>
-                        <h3 class="font-serif text-lg font-semibold text-brand-text mb-3 cursor-pointer hover:text-brand-sage transition-colors" onclick="openModal('Happy Little Dinosaur', 'https://placehold.co/600x800/F4EFEA/8FA382?text=Cute+Dino\\nKids', 'Kids Zone', 1)">Happy Little Dinosaur</h3>
-                        <div class="flex items-center justify-between mt-4">
-                            <span class="text-sm font-medium flex items-center text-gray-700">
-                                🐾 1 Point
-                            </span>
-                            <button onclick="mockDownload('Happy Little Dinosaur', 1)" class="w-8 h-8 rounded-full bg-brand-milktea flex items-center justify-center text-brand-sage hover:bg-brand-sage hover:text-white transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+        <!-- 填色圖網格 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
             
-            <div class="mt-12 text-center">
-                <button class="border-2 border-brand-sage text-brand-sage px-8 py-3 rounded-full font-medium hover:bg-brand-sage hover:text-white transition-colors">
-                    Load More Pages
-                </button>
+            <!-- 卡片 1 -->
+            <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="floral">
+                <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Vintage Floral Wreath', category: 'Botanical', desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!', cost: 1, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80'})">
+                    <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" alt="Floral Wreath" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">🔍 Preview</span>
+                    </div>
+                </div>
+                <div class="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                    <div>
+                        <div class="text-[10px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Botanical</div>
+                        <h3 class="font-serif text-base sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition">Vintage Floral Wreath</h3>
+                    </div>
+                    <div class="mt-3 sm:mt-4 flex items-center justify-between pt-3 border-t border-cream-100">
+                        <span class="text-xs font-medium text-sage-600 flex items-center space-x-1">
+                            <span>🐾</span><span>1 Point</span>
+                        </span>
+                        <button onclick="openPreview({title: 'Vintage Floral Wreath', category: 'Botanical', desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!', cost: 1, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80'})" class="text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                            View & Download
+                        </button>
+                    </div>
+                </div>
             </div>
-        </section>
+
+            <!-- 卡片 2 -->
+            <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="cozy">
+                <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Cat & Coffee Morning', category: 'Cozy Life', desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.', cost: 1, image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80'})">
+                    <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80" alt="Cat Coffee" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">🔍 Preview</span>
+                    </div>
+                </div>
+                <div class="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                    <div>
+                        <div class="text-[10px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Cozy Life</div>
+                        <h3 class="font-serif text-base sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition">Cat & Coffee Morning</h3>
+                    </div>
+                    <div class="mt-3 sm:mt-4 flex items-center justify-between pt-3 border-t border-cream-100">
+                        <span class="text-xs font-medium text-sage-600 flex items-center space-x-1">
+                            <span>🐾</span><span>1 Point</span>
+                        </span>
+                        <button onclick="openPreview({title: 'Cat & Coffee Morning', category: 'Cozy Life', desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.', cost: 1, image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80'})" class="text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                            View & Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片 3 -->
+            <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="mandala">
+                <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Zen Garden Mandala', category: 'Mandala & Zen', desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.', cost: 2, image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'})">
+                    <span class="absolute top-3 left-3 z-10 bg-sage-700/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Detailed</span>
+                    <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" alt="Mandala" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">🔍 Preview</span>
+                    </div>
+                </div>
+                <div class="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                    <div>
+                        <div class="text-[10px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Mandala & Zen</div>
+                        <h3 class="font-serif text-base sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition">Zen Garden Mandala</h3>
+                    </div>
+                    <div class="mt-3 sm:mt-4 flex items-center justify-between pt-3 border-t border-cream-100">
+                        <span class="text-xs font-medium text-sage-600 flex items-center space-x-1">
+                            <span>🐾</span><span>2 Points</span>
+                        </span>
+                        <button onclick="openPreview({title: 'Zen Garden Mandala', category: 'Mandala & Zen', desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.', cost: 2, image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'})" class="text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                            View & Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片 4 -->
+            <div class="gallery-card group bg-white rounded-2xl overflow-hidden border border-cream-200 shadow-sm hover:shadow-md transition duration-300 flex flex-col" data-category="kids">
+                <div class="relative aspect-[4/5] bg-cream-100 overflow-hidden cursor-pointer" onclick="openPreview({title: 'Little Dinosaur Adventure', category: 'Kids Zone', desc: 'Thick, bold lines and simple friendly dinosaur characters designed specially for young kids and toddlers. Fun and easy to color!', cost: 1, image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80'})">
+                    <span class="absolute top-3 left-3 z-10 bg-amber-600/85 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">Kids Favorite</span>
+                    <img src="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80" alt="Dino" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <span class="bg-white/90 backdrop-blur-sm text-sage-700 text-xs font-bold px-3 py-1.5 rounded-full shadow">🔍 Preview</span>
+                    </div>
+                </div>
+                <div class="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                    <div>
+                        <div class="text-[10px] sm:text-xs font-semibold text-sage-500 uppercase tracking-wider mb-1">Kids Zone</div>
+                        <h3 class="font-serif text-base sm:text-lg font-bold text-sage-700 group-hover:text-sage-500 transition">Little Dinosaur Adventure</h3>
+                    </div>
+                    <div class="mt-3 sm:mt-4 flex items-center justify-between pt-3 border-t border-cream-100">
+                        <span class="text-xs font-medium text-sage-600 flex items-center space-x-1">
+                            <span>🐾</span><span>1 Point</span>
+                        </span>
+                        <button onclick="openPreview({title: 'Little Dinosaur Adventure', category: 'Kids Zone', desc: 'Thick, bold lines and simple friendly dinosaur characters designed specially for young kids and toddlers. Fun and easy to color!', cost: 1, image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80'})" class="text-xs font-semibold bg-sage-50 text-sage-700 hover:bg-sage-500 hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                            View & Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </main>
 
-    <footer class="bg-brand-milktea-dark/30 py-8 border-t border-brand-milktea-dark mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
-            <p>&copy; 2026 Littlepawspaper. All rights reserved.</p>
-            <div class="flex space-x-6 mt-4 sm:mt-0">
-                <a href="#" class="hover:text-brand-sage transition-colors">Etsy Shop</a>
-                <a href="#" class="hover:text-brand-sage transition-colors">Instagram</a>
-                <a href="#" class="hover:text-brand-sage transition-colors">Terms of Use</a>
-                <a href="#" class="hover:text-brand-sage transition-colors">Privacy Policy</a>
+    <!-- 底部資訊列 (Footer) - 優化手機版換行與邊距 -->
+    <footer class="bg-cream-100 border-t border-cream-200 mt-10 sm:mt-16 py-8 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div>
+                <span class="font-serif text-xl sm:text-2xl font-bold text-sage-700 italic">Littlepawspaper</span>
+                <p class="text-[11px] sm:text-xs text-sage-600 mt-1 leading-snug">© 2026 Littlepawspaper. All rights reserved. Printable Art for Creative Souls.</p>
+            </div>
+            <div class="flex items-center space-x-4 sm:space-x-6 text-xs sm:text-sm font-medium text-sage-600">
+                <a href="#" class="hover:text-sage-500 transition">Terms</a>
+                <a href="#" class="hover:text-sage-500 transition">Privacy</a>
+                <a href="#" class="hover:text-sage-500 transition">Instagram</a>
+                <a href="#" class="hover:text-sage-500 transition">Etsy Shop</a>
             </div>
         </div>
     </footer>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+    <!-- ================= 彈窗元件 (Modals) ================= -->
 
-    <!-- Image Preview Modal -->
-    <div id="preview-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
-        
-        <!-- Modal Content Container -->
-        <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0 pointer-events-none">
+    <!-- 1. 圖片預覽與下載彈窗 -->
+    <div id="preview-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 max-h-[92vh] flex flex-col" id="preview-modal-content">
             
-            <!-- Modal Panel -->
-            <div id="modal-panel" class="modal-enter relative overflow-hidden rounded-3xl bg-white text-left shadow-2xl sm:my-8 sm:w-full sm:max-w-4xl border border-brand-milktea pointer-events-auto flex flex-col sm:flex-row">
-                
-                <!-- Close Button -->
-                <button onclick="closeModal()" class="absolute top-4 right-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-md text-gray-500 hover:text-brand-sage hover:bg-brand-milktea transition-all shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+            <div class="flex items-center justify-between px-5 py-3.5 border-b border-cream-100">
+                <span id="modal-category" class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sage-500">Category</span>
+                <button onclick="closePreview()" class="w-7 h-7 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs transition">
+                    ✕
                 </button>
+            </div>
 
-                <!-- Left: Image Area -->
-                <div class="sm:w-1/2 bg-brand-milktea relative aspect-w-3 aspect-h-4 sm:aspect-auto sm:min-h-[500px]">
-                    <img id="modal-img" src="" alt="Preview" class="absolute inset-0 w-full h-full object-cover p-8 sm:p-12">
-                    <!-- Watermark -->
-                    <div class="absolute inset-0 flex items-center justify-center opacity-[0.08] pointer-events-none">
-                        <span class="font-serif font-bold text-4xl sm:text-5xl rotate-[-45deg] tracking-widest text-brand-text">Littlepawspaper</span>
+            <div class="overflow-y-auto p-4 sm:p-6 flex flex-col md:flex-row gap-4 sm:gap-6">
+                <div class="w-full md:w-1/2 aspect-[4/5] bg-cream-100 rounded-2xl overflow-hidden relative shadow-inner flex-shrink-0 max-h-[280px] sm:max-h-none">
+                    <img id="modal-img" src="" alt="Preview" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15">
+                        <span class="font-serif text-xl sm:text-2xl font-bold tracking-widest text-black rotate-[-30deg]">Littlepawspaper</span>
                     </div>
                 </div>
 
-                <!-- Right: Details Area -->
-                <div class="sm:w-1/2 p-8 sm:p-12 flex flex-col justify-center bg-white">
-                    <p id="modal-category" class="text-sm text-brand-sage font-medium uppercase tracking-wider mb-2">Category</p>
-                    <h2 id="modal-title-text" class="font-serif text-3xl sm:text-4xl font-bold text-brand-text mb-4 leading-tight">Title</h2>
-                    
-                    <p class="text-gray-600 font-light mb-6 leading-relaxed">
-                        Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!
-                    </p>
-                    
-                    <!-- Tags -->
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-3 py-1.5 bg-brand-milktea rounded-md text-xs font-medium text-gray-700 flex items-center">
-                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            High-Res PDF
-                        </span>
-                        <span class="px-3 py-1.5 bg-brand-milktea rounded-md text-xs font-medium text-gray-700 flex items-center">
-                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Instant Download
-                        </span>
-                    </div>
-
-                    <!-- Format Selection -->
-                    <div class="mb-8">
-                        <span class="text-xs text-gray-500 uppercase tracking-wide font-medium block mb-3">Select Format</span>
-                        <div class="flex space-x-3">
-                            <label class="cursor-pointer relative">
-                                <input type="radio" name="paper-format" value="A4" class="peer sr-only" checked>
-                                <div class="px-4 py-2.5 rounded-xl border-2 border-gray-100 text-sm font-medium text-gray-500 peer-checked:border-brand-sage peer-checked:text-brand-sage-dark peer-checked:bg-brand-sage/10 transition-all hover:bg-gray-50">
-                                    📄 A4 Format
-                                </div>
-                            </label>
-                            <label class="cursor-pointer relative">
-                                <input type="radio" name="paper-format" value="US Letter" class="peer sr-only">
-                                <div class="px-4 py-2.5 rounded-xl border-2 border-gray-100 text-sm font-medium text-gray-500 peer-checked:border-brand-sage peer-checked:text-brand-sage-dark peer-checked:bg-brand-sage/10 transition-all hover:bg-gray-50">
-                                    📄 US Letter
-                                </div>
-                            </label>
+                <div class="w-full md:w-1/2 flex flex-col justify-between">
+                    <div>
+                        <h2 id="modal-title" class="font-serif text-xl sm:text-3xl font-bold text-sage-700 mb-2">Title</h2>
+                        <p id="modal-desc" class="text-xs sm:text-sm text-sage-600/90 leading-relaxed mb-4">Description goes here...</p>
+                        
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            <span class="text-[11px] bg-cream-100 text-sage-700 px-2.5 py-1 rounded-lg font-medium">📄 High-Res PDF</span>
+                            <span class="text-[11px] bg-cream-100 text-sage-700 px-2.5 py-1 rounded-lg font-medium">⚡ Instant Download</span>
                         </div>
-                    </div>
 
-                    <!-- Price & Action -->
-                    <div class="mt-auto pt-6 border-t border-gray-100 flex items-center justify-between">
-                        <div class="flex flex-col">
-                            <span class="text-xs text-gray-500 uppercase tracking-wide font-medium">Cost</span>
-                            <div class="flex items-center space-x-1 mt-1">
-                                <span class="text-xl">🐾</span>
-                                <span id="modal-price" class="text-2xl font-bold text-brand-text">1 Point</span>
+                        <div class="mb-4">
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-sage-500 mb-1.5">Select Format</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center justify-center p-2.5 rounded-xl border-2 border-sage-500 bg-sage-50/50 cursor-pointer text-xs font-medium text-sage-700 transition format-option" onclick="selectFormat('A4', this)">
+                                    <input type="radio" name="paper-format" value="A4" checked class="hidden">
+                                    <span>📄 A4 Format</span>
+                                </label>
+                                <label class="flex items-center justify-center p-2.5 rounded-xl border-2 border-cream-200 hover:border-sage-300 cursor-pointer text-xs font-medium text-sage-600 transition format-option" onclick="selectFormat('US Letter', this)">
+                                    <input type="radio" name="paper-format" value="US Letter" class="hidden">
+                                    <span>📄 US Letter</span>
+                                </label>
                             </div>
                         </div>
-                        <button id="modal-download-btn" class="bg-brand-sage text-white px-8 py-3.5 rounded-full font-medium hover:bg-brand-sage-dark transition-all transform hover:-translate-y-0.5 shadow-lg shadow-brand-sage/30 flex items-center">
-                            Download Now
+                    </div>
+
+                    <div class="pt-3 border-t border-cream-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-sage-500 block">Cost</span>
+                            <span id="modal-cost-display" class="font-bold text-sage-700 text-base sm:text-lg flex items-center space-x-1">
+                                <span>🐾</span><span id="modal-cost-num">1</span> <span>Point</span>
+                            </span>
+                        </div>
+                        <button onclick="handleDownload()" class="bg-sage-500 hover:bg-sage-600 text-white text-xs sm:text-sm font-medium px-5 py-2.5 rounded-xl shadow transition flex items-center space-x-2 whitespace-nowrap">
+                            <span>Download Now</span>
                         </button>
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
 
-    <!-- Top Up (Pricing) Modal -->
-    <div id="topup-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeTopUpModal()"></div>
-        
-        <!-- Modal Content Container -->
-        <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0 pointer-events-none">
-            
-            <!-- Modal Panel -->
-            <div id="topup-panel" class="modal-enter relative overflow-hidden rounded-3xl bg-white text-left shadow-2xl sm:my-8 sm:w-full sm:max-w-5xl border border-brand-milktea pointer-events-auto">
-                
-                <!-- Close Button -->
-                <button onclick="closeTopUpModal()" class="absolute top-4 right-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-brand-milktea/50 text-gray-500 hover:text-brand-sage hover:bg-brand-milktea transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-
-                <div class="px-6 py-12 sm:px-12 sm:py-16 bg-[#FAFAFA]">
-                    <div class="text-center mb-12">
-                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text mb-4">Get More Paws Point 🐾</h2>
-                        <p class="text-gray-600 font-light max-w-2xl mx-auto">Unlock more exclusive coloring pages. Choose the package that fits your creative journey. Secure payment via Stripe.</p>
-                    </div>
-
-                    <!-- Pricing Cards Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
-                        
-                        <!-- Starter Pack -->
-                        <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:border-brand-sage hover:shadow-lg transition-all">
-                            <h3 class="text-lg font-medium text-gray-900 mb-2">Starter Pack</h3>
-                            <div class="flex items-baseline mb-4">
-                                <span class="text-4xl font-bold text-brand-text">$5</span>
-                                <span class="text-gray-500 ml-2">USD</span>
-                            </div>
-                            <div class="bg-brand-milktea rounded-xl p-4 mb-8 text-center">
-                                <span class="block text-2xl mb-1">🐾 50</span>
-                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
-                            </div>
-                            <button onclick="mockCheckout('Starter Pack', 5, 50)" class="mt-auto w-full border-2 border-brand-sage text-brand-sage py-3 rounded-full font-medium hover:bg-brand-sage hover:text-white transition-colors">
-                                Choose Starter
-                            </button>
-                        </div>
-
-                        <!-- Popular Pack (Highlighted) -->
-                        <div class="bg-white rounded-2xl border-2 border-brand-sage p-8 flex flex-col shadow-xl relative transform md:-translate-y-4">
-                            <!-- Badge -->
-                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-sage text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
-                                Most Popular
-                            </div>
-                            
-                            <h3 class="text-lg font-medium text-gray-900 mb-2">Creative Pack</h3>
-                            <div class="flex items-baseline mb-4">
-                                <span class="text-4xl font-bold text-brand-text">$10</span>
-                                <span class="text-gray-500 ml-2">USD</span>
-                            </div>
-                            <div class="bg-brand-sage/10 rounded-xl p-4 mb-8 text-center relative overflow-hidden">
-                                <div class="absolute -right-4 -top-4 w-12 h-12 bg-brand-sage/20 rounded-full blur-xl"></div>
-                                <span class="block text-3xl font-bold text-brand-sage-dark mb-1">🐾 120</span>
-                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
-                                <span class="block text-xs text-brand-sage mt-2 font-medium">+20 Bonus Points!</span>
-                            </div>
-                            <button onclick="mockCheckout('Creative Pack', 10, 120)" class="mt-auto w-full bg-brand-sage text-white py-3 rounded-full font-medium hover:bg-brand-sage-dark transition-colors shadow-md">
-                                Choose Creative
-                            </button>
-                        </div>
-
-                        <!-- Value Pack -->
-                        <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:border-brand-sage hover:shadow-lg transition-all">
-                            <h3 class="text-lg font-medium text-gray-900 mb-2">Artist Pack</h3>
-                            <div class="flex items-baseline mb-4">
-                                <span class="text-4xl font-bold text-brand-text">$20</span>
-                                <span class="text-gray-500 ml-2">USD</span>
-                            </div>
-                            <div class="bg-brand-milktea rounded-xl p-4 mb-8 text-center">
-                                <span class="block text-2xl mb-1">🐾 280</span>
-                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
-                                <span class="block text-xs text-gray-500 mt-2 font-medium">+80 Bonus Points!</span>
-                            </div>
-                            <button onclick="mockCheckout('Artist Pack', 20, 280)" class="mt-auto w-full border-2 border-brand-sage text-brand-sage py-3 rounded-full font-medium hover:bg-brand-sage hover:text-white transition-colors">
-                                Choose Artist
-                            </button>
-                        </div>
-
-                    </div>
-                    
-                    <!-- Secure Payment Info -->
-                    <div class="mt-12 text-center flex flex-col items-center justify-center">
-                        <p class="text-xs text-gray-400 mb-3 uppercase tracking-wider font-medium flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            Guaranteed Safe & Secure Checkout
-                        </p>
-                        <!-- Fake payment icons using styled divs (in real site, use SVG logos) -->
-                        <div class="flex space-x-2">
-                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold text-blue-900">VISA</div>
-                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center">
-                                <div class="flex -space-x-2">
-                                    <div class="w-4 h-4 rounded-full bg-red-500 mix-blend-multiply opacity-80"></div>
-                                    <div class="w-4 h-4 rounded-full bg-yellow-400 mix-blend-multiply opacity-80"></div>
-                                </div>
-                            </div>
-                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold">Pay</div>
-                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold">G Pay</div>
-                        </div>
-                    </div>
+    <!-- 2. 儲值點數彈窗 (Top Up Modal) -->
+    <div id="topup-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 p-5 sm:p-8" id="topup-modal-content">
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <h3 class="font-serif text-xl sm:text-2xl font-bold text-sage-700">Top Up Paws Point 🐾</h3>
+                    <p class="text-[11px] sm:text-xs text-sage-600 mt-0.5">Choose a bundle to get instant download credits.</p>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Auth (Login/Register) Modal -->
-    <div id="auth-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeAuthModal()"></div>
-        
-        <!-- Modal Content Container -->
-        <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0 pointer-events-none">
-            
-            <!-- Modal Panel -->
-            <div id="auth-panel" class="modal-enter relative overflow-hidden rounded-3xl bg-white text-left shadow-2xl sm:my-8 sm:w-full sm:max-w-md border border-brand-milktea pointer-events-auto">
-                
-                <!-- Close Button -->
-                <button onclick="closeAuthModal()" class="absolute top-4 right-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-gray-50 text-gray-500 hover:text-brand-sage hover:bg-brand-milktea transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                <button onclick="closeTopUpModal()" class="w-7 h-7 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs transition">
+                    ✕
                 </button>
+            </div>
 
-                <div class="px-8 py-10 sm:px-10 sm:py-12">
-                    <!-- Header -->
-                    <div class="text-center mb-8">
-                        <span class="font-serif italic font-bold text-2xl text-brand-sage block mb-4">Littlepawspaper</span>
-                        <h2 id="auth-title" class="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-                        <p id="auth-subtitle" class="text-sm text-gray-500">Sign in to access your downloaded pages.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-5">
+                <!-- Starter -->
+                <div class="border border-cream-200 rounded-2xl p-4 text-center hover:border-sage-500 transition flex sm:flex-col justify-between items-center sm:items-stretch">
+                    <div class="text-left sm:text-center">
+                        <div class="text-[10px] font-semibold text-sage-500 uppercase tracking-wider mb-0.5">Starter</div>
+                        <div class="font-serif text-2xl sm:text-3xl font-bold text-sage-700">50 <span class="text-xs font-sans text-sage-500">Pts</span></div>
+                        <div class="text-[11px] text-sage-600">$5.00 USD</div>
                     </div>
-
-                    <!-- Social Login -->
-                    <button class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors mb-6 shadow-sm">
-                        <svg class="h-5 w-5 mr-3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                        </svg>
-                        Continue with Google
+                    <button onclick="simulateTopUp(50, 5)" class="w-auto sm:w-full mt-0 sm:mt-3 bg-cream-100 hover:bg-sage-500 hover:text-white text-sage-700 text-xs font-semibold px-4 py-2 sm:py-2.5 rounded-xl transition whitespace-nowrap">
+                        Select
                     </button>
-
-                    <div class="relative flex items-center mb-6">
-                        <div class="flex-grow border-t border-gray-200"></div>
-                        <span class="flex-shrink-0 mx-4 text-xs text-gray-400 font-medium uppercase tracking-wider">Or email</span>
-                        <div class="flex-grow border-t border-gray-200"></div>
-                    </div>
-
-                    <!-- Form -->
-                    <form onsubmit="event.preventDefault(); mockSubmitAuth();" class="space-y-5">
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-                            <input type="email" id="email" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-sage focus:border-brand-sage outline-none transition-all text-sm" placeholder="you@example.com" required>
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                                <a href="#" id="forgot-password-link" class="text-xs font-medium text-brand-sage hover:text-brand-sage-dark">Forgot?</a>
-                            </div>
-                            <input type="password" id="password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-sage focus:border-brand-sage outline-none transition-all text-sm" placeholder="••••••••" required>
-                        </div>
-                        
-                        <button type="submit" id="auth-submit-btn" class="w-full bg-brand-sage text-white py-3 rounded-xl font-medium hover:bg-brand-sage-dark transition-all transform hover:-translate-y-0.5 shadow-md mt-2">
-                            Sign In
-                        </button>
-                    </form>
-
-                    <!-- Toggle Mode -->
-                    <div class="mt-8 text-center text-sm text-gray-600">
-                        <span id="auth-toggle-text">Don't have an account?</span> 
-                        <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="font-medium text-brand-sage hover:text-brand-sage-dark transition-colors">
-                            Sign up for free
-                        </button>
-                    </div>
                 </div>
+
+                <!-- Creative -->
+                <div class="border-2 border-sage-500 bg-sage-50/30 rounded-2xl p-4 text-center shadow-sm relative flex sm:flex-col justify-between items-center sm:items-stretch">
+                    <span class="absolute -top-2.5 left-4 sm:left-1/2 sm:-translate-x-1/2 bg-sage-500 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Popular</span>
+                    <div class="text-left sm:text-center mt-1 sm:mt-0">
+                        <div class="text-[10px] font-semibold text-sage-500 uppercase tracking-wider mb-0.5">Creative</div>
+                        <div class="font-serif text-2xl sm:text-3xl font-bold text-sage-700">120 <span class="text-xs font-sans text-sage-500">Pts</span></div>
+                        <div class="text-[11px] text-sage-600">$10.00 USD</div>
+                    </div>
+                    <button onclick="simulateTopUp(120, 10)" class="w-auto sm:w-full mt-0 sm:mt-3 bg-sage-500 hover:bg-sage-600 text-white text-xs font-semibold px-4 py-2 sm:py-2.5 rounded-xl shadow transition whitespace-nowrap">
+                        Select
+                    </button>
+                </div>
+
+                <!-- Artist -->
+                <div class="border border-cream-200 rounded-2xl p-4 text-center hover:border-sage-500 transition flex sm:flex-col justify-between items-center sm:items-stretch">
+                    <div class="text-left sm:text-center">
+                        <div class="text-[10px] font-semibold text-sage-500 uppercase tracking-wider mb-0.5">Artist</div>
+                        <div class="font-serif text-2xl sm:text-3xl font-bold text-sage-700">280 <span class="text-xs font-sans text-sage-500">Pts</span></div>
+                        <div class="text-[11px] text-sage-600">$20.00 USD</div>
+                    </div>
+                    <button onclick="simulateTopUp(280, 20)" class="w-auto sm:w-full mt-0 sm:mt-3 bg-cream-100 hover:bg-sage-500 hover:text-white text-sage-700 text-xs font-semibold px-4 py-2 sm:py-2.5 rounded-xl transition whitespace-nowrap">
+                        Select
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center space-x-2 text-[11px] text-sage-600 pt-3 border-t border-cream-100">
+                <span>🔒 Secure Stripe Checkout</span>
+                <span>•</span>
+                <span>Instant Credit</span>
             </div>
         </div>
     </div>
 
+    <!-- 3. 登入/註冊彈窗 -->
+    <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 p-6 sm:p-8" id="auth-modal-content">
+            <div class="flex items-center justify-between mb-5">
+                <h3 id="auth-modal-title" class="font-serif text-xl sm:text-2xl font-bold text-sage-700">Sign In to Littlepawspaper</h3>
+                <button onclick="closeAuthModal()" class="w-7 h-7 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs transition">
+                    ✕
+                </button>
+            </div>
+
+            <button onclick="mockLogin()" class="w-full border border-cream-200 hover:bg-cream-50 text-sage-700 font-medium py-2.5 sm:py-3 rounded-xl transition flex items-center justify-center space-x-2 sm:space-x-3 mb-4 shadow-sm text-xs sm:text-sm">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                <span>Continue with Google</span>
+            </button>
+
+            <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-cream-200"></div>
+                <span class="flex-shrink mx-3 text-[10px] sm:text-xs text-sage-600 uppercase">or email</span>
+                <div class="flex-grow border-t border-cream-200"></div>
+            </div>
+
+            <form onsubmit="event.preventDefault(); mockLogin();" class="space-y-3 sm:space-y-4 mt-2">
+                <div>
+                    <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sage-500 mb-1">Email Address</label>
+                    <input type="email" required placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-sage-500 text-xs sm:text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-sage-500 mb-1">Password</label>
+                    <input type="password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-sage-500 text-xs sm:text-sm">
+                </div>
+                <button type="submit" class="w-full bg-sage-500 hover:bg-sage-600 text-white font-medium py-2.5 sm:py-3 rounded-xl shadow transition text-xs sm:text-sm">
+                    <span id="auth-submit-text">Sign In</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Toast 通知列 -->
+    <div id="toast" class="fixed bottom-5 right-5 left-5 sm:left-auto z-50 bg-sage-700 text-white px-5 py-3 rounded-2xl shadow-xl transform translate-y-24 opacity-0 transition-all duration-300 flex items-center justify-center sm:justify-start space-x-2 text-xs sm:text-sm font-medium">
+        <span id="toast-icon" class="text-base">✨</span>
+        <span id="toast-msg">Notification message</span>
+    </div>
+
+    <!-- JavaScript 互動邏輯 -->
     <script>
-        // Mock User State
-        let currentPawsPoints = 5;
-        let isLoggedIn = false; // 新增：預設為未登入狀態
-        let currentAuthMode = 'login'; // 'login' or 'register'
+        let isLoggedIn = false;
+        let userPoints = 5;
+        let currentSelectedData = null;
+        let selectedPaperFormat = 'A4';
 
-        // Developer Test Function: Instantly empty points
-        function testEmptyPoints() {
-            currentPawsPoints = 0;
-            const pointDisplay = document.querySelector('header span:nth-child(2)');
-            if (pointDisplay) {
-                pointDisplay.textContent = `${currentPawsPoints} Paws Point`;
-            }
-            showToast('🛠️ 測試秘技：點數已瞬間歸零！現在去下載圖片試試看吧。', 'error');
-        }
+        function updateNavState() {
+            const loggedOutNav = document.getElementById('logged-out-nav');
+            const loggedInNav = document.getElementById('logged-in-nav');
+            const pointsSpan = document.getElementById('user-points');
 
-        // Initialize Filter Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const products = document.querySelectorAll('.product-card');
-
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // 1. Reset all buttons visually
-                    filterBtns.forEach(b => {
-                        b.classList.remove('bg-brand-sage', 'text-white');
-                        b.classList.add('bg-brand-milktea', 'text-gray-600', 'hover:bg-brand-milktea-dark');
-                    });
-                    
-                    // 2. Set active state on clicked button
-                    btn.classList.remove('bg-brand-milktea', 'text-gray-600', 'hover:bg-brand-milktea-dark');
-                    btn.classList.add('bg-brand-sage', 'text-white');
-
-                    // 3. Filter the products
-                    const filterValue = btn.getAttribute('data-filter');
-                    
-                    products.forEach(product => {
-                        const productCategory = product.getAttribute('data-category');
-                        
-                        if (filterValue === 'all' || productCategory === filterValue) {
-                            product.style.display = 'block';
-                            // Add a tiny animation to make it feel smooth
-                            product.style.animation = 'slideInUp 0.3s ease-out forwards';
-                        } else {
-                            product.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        });
-
-        // Custom Toast Notification Function (Replaces alert)
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            
-            const toast = document.createElement('div');
-            toast.className = `toast-animate flex items-center p-4 rounded-xl shadow-lg border max-w-sm w-full bg-white text-gray-800 ${type === 'error' ? 'border-red-200' : 'border-brand-sage'}`;
-            
-            const icon = type === 'error' 
-                ? `<div class="w-8 h-8 rounded-full bg-red-100 flex-shrink-0 flex items-center justify-center text-red-500 mr-3">✕</div>`
-                : `<div class="w-8 h-8 rounded-full bg-brand-milktea flex-shrink-0 flex items-center justify-center text-brand-sage mr-3">✓</div>`;
-                
-            toast.innerHTML = `
-                ${icon}
-                <div class="flex-1 text-sm font-medium">${message}</div>
-            `;
-            
-            container.appendChild(toast);
-            
-            // Remove toast after 3 seconds
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(20px)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Modal Logic
-        function openModal(title, imageSrc, category, points) {
-            // Populate data
-            document.getElementById('modal-title-text').textContent = title;
-            document.getElementById('modal-img').src = imageSrc;
-            document.getElementById('modal-category').textContent = category;
-            document.getElementById('modal-price').textContent = `${points} Point${points > 1 ? 's' : ''}`;
-            
-            // Reset format selection to default (A4)
-            const defaultFormatRadio = document.querySelector('input[name="paper-format"][value="A4"]');
-            if (defaultFormatRadio) defaultFormatRadio.checked = true;
-            
-            // Set up download button action for this specific item
-            const btn = document.getElementById('modal-download-btn');
-            btn.onclick = () => {
-                // 獲取使用者選擇的格式 (A4 或 US Letter)
-                const selectedFormat = document.querySelector('input[name="paper-format"]:checked').value;
-                mockDownload(title, points, selectedFormat);
-                closeModal(); 
-            };
-
-            const modal = document.getElementById('preview-modal');
-            const panel = document.getElementById('modal-panel');
-            
-            // Show modal
-            modal.classList.remove('hidden');
-            
-            // Trigger entry animation
-            // requestAnimationFrame ensures the display:block is rendered before animating opacity/transform
-            requestAnimationFrame(() => {
-                panel.classList.remove('modal-enter');
-                panel.classList.add('modal-enter-active');
-            });
-            
-            // Prevent body scrolling
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('preview-modal');
-            const panel = document.getElementById('modal-panel');
-            
-            // Trigger leave animation
-            panel.classList.remove('modal-enter-active');
-            panel.classList.add('modal-leave-active');
-            
-            // Wait for animation to finish before hiding completely
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                panel.classList.remove('modal-leave-active');
-                panel.classList.add('modal-enter'); // reset state
-                
-                // Restore body scrolling
-                document.body.style.overflow = '';
-            }, 200); 
-        }
-
-        // --- AUTHENTICATION MODAL LOGIC ---
-        
-        function openAuthModal(mode = 'login') {
-            currentAuthMode = mode;
-            updateAuthUI();
-            
-            const modal = document.getElementById('auth-modal');
-            const panel = document.getElementById('auth-panel');
-            
-            modal.classList.remove('hidden');
-            requestAnimationFrame(() => {
-                panel.classList.remove('modal-enter');
-                panel.classList.add('modal-enter-active');
-            });
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            const panel = document.getElementById('auth-panel');
-            
-            panel.classList.remove('modal-enter-active');
-            panel.classList.add('modal-leave-active');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                panel.classList.remove('modal-leave-active');
-                panel.classList.add('modal-enter');
-                document.body.style.overflow = '';
-            }, 200); 
-        }
-
-        function toggleAuthMode() {
-            currentAuthMode = currentAuthMode === 'login' ? 'register' : 'login';
-            updateAuthUI();
-        }
-
-        function updateAuthUI() {
-            const title = document.getElementById('auth-title');
-            const subtitle = document.getElementById('auth-subtitle');
-            const submitBtn = document.getElementById('auth-submit-btn');
-            const toggleText = document.getElementById('auth-toggle-text');
-            const toggleBtn = document.getElementById('auth-toggle-btn');
-            const forgotPwd = document.getElementById('forgot-password-link');
-
-            if (currentAuthMode === 'login') {
-                title.textContent = 'Welcome Back';
-                subtitle.textContent = 'Sign in to access your downloaded pages.';
-                submitBtn.textContent = 'Sign In';
-                toggleText.textContent = "Don't have an account?";
-                toggleBtn.textContent = 'Sign up for free';
-                forgotPwd.style.display = 'block';
+            if (isLoggedIn) {
+                loggedOutNav.classList.add('hidden');
+                loggedOutNav.classList.remove('flex');
+                loggedInNav.classList.add('flex');
+                loggedInNav.classList.remove('hidden');
+                pointsSpan.textContent = userPoints;
             } else {
-                title.textContent = 'Create an Account';
-                subtitle.innerHTML = 'Join today and get <span class="font-bold text-brand-sage">5 Free Paws Point!</span> 🐾';
-                submitBtn.textContent = 'Create Account';
-                toggleText.textContent = "Already have an account?";
-                toggleBtn.textContent = 'Sign in';
-                forgotPwd.style.display = 'none';
+                loggedInNav.classList.add('hidden');
+                loggedInNav.classList.remove('flex');
+                loggedOutNav.classList.add('flex');
+                loggedOutNav.classList.remove('hidden');
             }
         }
 
-        function mockSubmitAuth() {
-            // 模擬呼叫 Supabase 登入/註冊 API
-            closeAuthModal();
-            
+        function mockLogin() {
             isLoggedIn = true;
-            
-            // 更改 Header 導覽列 UI
-            document.getElementById('logged-out-nav').classList.add('hidden');
-            document.getElementById('logged-out-nav').classList.remove('flex');
-            
-            document.getElementById('logged-in-nav').classList.remove('hidden');
-            document.getElementById('logged-in-nav').classList.add('flex');
-
-            if (currentAuthMode === 'register') {
-                currentPawsPoints = 5;
-                showToast('Welcome to Littlepawspaper! You received 5 free Paws Point 🐾', 'success');
-            } else {
-                showToast('Welcome back! You have successfully signed in.', 'success');
-            }
-            
-            // 更新點數顯示
-            const pointDisplay = document.getElementById('nav-points-display');
-            if (pointDisplay) {
-                pointDisplay.textContent = `${currentPawsPoints} Paws Point`;
-            }
+            userPoints = 5;
+            updateNavState();
+            closeAuthModal();
+            showToast("Welcome! Received 5 Free Points 🐾", "🎉");
         }
 
-        // Mock Download Logic (Updated to accept format & check Auth)
-        function mockDownload(itemName, cost, format = 'Default') {
-            // 1. 先檢查是否登入
-            if (!isLoggedIn) {
-                showToast('Please sign in to download coloring pages.', 'error');
-                
-                // 如果是從 Preview Modal 按下載的，先關閉大圖預覽
-                const previewModal = document.getElementById('preview-modal');
-                if (!previewModal.classList.contains('hidden')) {
-                    closeModal();
+        function logout() {
+            isLoggedIn = false;
+            updateNavState();
+            showToast("Logged out successfully.", "👋");
+        }
+
+        function doubleClickSecretZero(e) {
+            userPoints = 0;
+            updateNavState();
+            showToast("Dev mode: Points reset to 0!", "🛠️");
+        }
+
+        function filterGallery(category) {
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => {
+                if(btn.dataset.filter === category) {
+                    btn.className = "category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition";
+                } else {
+                    btn.className = "category-btn whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition";
                 }
-                
-                // 彈出登入視窗
-                setTimeout(() => openAuthModal('login'), 300);
+            });
+
+            const cards = document.querySelectorAll('.gallery-card');
+            cards.forEach(card => {
+                if(category === 'all' || card.dataset.category === category) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        function openPreview(data) {
+            currentSelectedData = data;
+            document.getElementById('modal-category').textContent = data.category;
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-desc').textContent = data.desc;
+            document.getElementById('modal-img').src = data.image;
+            document.getElementById('modal-cost-num').textContent = data.cost;
+
+            const modal = document.getElementById('preview-modal');
+            const content = document.getElementById('preview-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closePreview() {
+            const modal = document.getElementById('preview-modal');
+            const content = document.getElementById('preview-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function selectFormat(format, element) {
+            selectedPaperFormat = format;
+            document.querySelectorAll('.format-option').forEach(el => {
+                el.classList.remove('border-sage-500', 'bg-sage-50/50', 'text-sage-700');
+                el.classList.add('border-cream-200', 'text-sage-600');
+            });
+            element.classList.remove('border-cream-200', 'text-sage-600');
+            element.classList.add('border-sage-500', 'bg-sage-50/50', 'text-sage-700');
+            element.querySelector('input').checked = true;
+        }
+
+        function handleDownload() {
+            if (!isLoggedIn) {
+                closePreview();
+                openAuthModal('signin');
+                showToast("Please sign in to download.", "🔒");
                 return;
             }
 
-            // 2. 檢查點數餘額
-            if (currentPawsPoints >= cost) {
-                // Deduct points
-                currentPawsPoints -= cost;
-                
-                // Update UI (finding the points display in header)
-                const pointDisplay = document.getElementById('nav-points-display');
-                if (pointDisplay) {
-                    pointDisplay.textContent = `${currentPawsPoints} Paws Point`;
-                }
-                
-                showToast(`Success! Downloading "${itemName}" (${format}). (-${cost} 🐾)`);
-                
-                // 成功後關閉預覽彈窗
-                const previewModal = document.getElementById('preview-modal');
-                if (!previewModal.classList.contains('hidden')) {
-                    closeModal();
-                }
-                
-            } else {
-                showToast(`Not enough Paws Point to download "${itemName}". Please Top Up!`, 'error');
-                
-                // Automatically open top-up modal if points are insufficient after a short delay
-                setTimeout(() => {
-                    const previewModal = document.getElementById('preview-modal');
-                    if (!previewModal.classList.contains('hidden')) {
-                        closeModal();
-                    }
-                    setTimeout(() => openTopUpModal(), 300);
-                }, 1000);
+            if (userPoints < currentSelectedData.cost) {
+                closePreview();
+                openTopUpModal();
+                showToast("Not enough Paws Points! Please top up.", "💡");
+                return;
             }
+
+            userPoints -= currentSelectedData.cost;
+            updateNavState();
+            closePreview();
+            showToast(`Downloading "${currentSelectedData.title}" (${selectedPaperFormat}).`, "📥");
         }
 
-        // Top Up Modal Logic
         function openTopUpModal() {
             const modal = document.getElementById('topup-modal');
-            const panel = document.getElementById('topup-panel');
-            
+            const content = document.getElementById('topup-modal-content');
             modal.classList.remove('hidden');
-            requestAnimationFrame(() => {
-                panel.classList.remove('modal-enter');
-                panel.classList.add('modal-enter-active');
-            });
-            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
         }
 
         function closeTopUpModal() {
             const modal = document.getElementById('topup-modal');
-            const panel = document.getElementById('topup-panel');
-            
-            panel.classList.remove('modal-enter-active');
-            panel.classList.add('modal-leave-active');
-            
+            const content = document.getElementById('topup-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
             setTimeout(() => {
                 modal.classList.add('hidden');
-                panel.classList.remove('modal-leave-active');
-                panel.classList.add('modal-enter');
-                document.body.style.overflow = '';
-            }, 200); 
+            }, 300);
         }
 
-        // Mock Stripe Checkout Logic
-        function mockCheckout(packageName, price, points) {
-            // 1. Close the pricing modal
+        function simulateTopUp(points, price) {
+            userPoints += points;
+            updateNavState();
             closeTopUpModal();
-            
-            // 2. Show a "Redirecting to Stripe" message
-            showToast(`Redirecting to secure Stripe checkout for ${packageName}...`, 'success');
-            
-            // 3. Mock a successful payment returning from Stripe after 2 seconds
-            setTimeout(() => {
-                currentPawsPoints += points;
-                
-                // Update UI Header
-                const pointDisplay = document.getElementById('nav-points-display');
-                if (pointDisplay) {
-                    pointDisplay.textContent = `${currentPawsPoints} Paws Point`;
-                }
-                
-                showToast(`Payment successful! Added ${points} Paws Point to your account. 🐾`, 'success');
-            }, 2500);
+            showToast(`Top up ${points} Paws Points ($${price} USD)!`, "🎉");
         }
+
+        function openAuthModal(mode) {
+            const title = document.getElementById('auth-modal-title');
+            const btnText = document.getElementById('auth-submit-text');
+            if (mode === 'signup') {
+                title.textContent = "Create Account";
+                btnText.textContent = "Sign Up & Get 5 Points";
+            } else {
+                title.textContent = "Sign In to Littlepawspaper";
+                btnText.textContent = "Sign In";
+            }
+
+            const modal = document.getElementById('auth-modal');
+            const content = document.getElementById('auth-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            const content = document.getElementById('auth-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function showToast(message, icon = "✨") {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = message;
+            document.getElementById('toast-icon').textContent = icon;
+            
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
+        }
+
+        updateNavState();
     </script>
 </body>
 </html>
