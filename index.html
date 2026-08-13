@@ -445,19 +445,75 @@
         let currentDisplayCount = 4; // 預設一開始顯示 4 張
         let currentFilter = 'all';
 
-        // 初始化載入
-        document.addEventListener('DOMContentLoaded', async () => {
-            renderGallery();
-            if (supabaseClient) {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                if (session) {
-                    isLoggedIn = true;
-                    userPoints = 5;
-                    updateNavState();
+        // 初始化與 Supabase 狀態監聽
+document.addEventListener('DOMContentLoaded', async () => {
+    renderGallery();
+
+    if (supabaseClient) {
+        // 1. 頁面開啟時主動檢查 Session（處理 Google 登入跳轉）
+        try {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session && session.user) {
+                isLoggedIn = true;
+                currentUser = session.user;
+                await syncUserProfile(session.user);
+                
+                // 清除網址列長長的 #access_token=... 保持乾淨
+                if (window.location.hash.includes('access_token')) {
+                    history.replaceState(null, '', window.location.pathname);
+                    showToast("Welcome! Signed in with Google 🐾", "🎉");
                 }
             }
-        });
+        } catch (e) {
+            console.error("Session check error:", e);
+        }
 
+        // 2. 監聽 Auth 狀態變更
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            if (session && session.user) {
+                isLoggedIn = true;
+                currentUser = session.user;
+                await syncUserProfile(session.user);
+            } else {
+                isLoggedIn = false;
+                currentUser = null;
+                updateNavState();
+            }
+        });
+    }
+});
+
+// 向 Supabase 查詢/建立使用者點數資料
+async function syncUserProfile(user) {
+    if (!supabaseClient || !user) return;
+
+    try {
+        // 讀取或自動建立 Profiles 資料表
+        let { data, error } = await supabaseClient
+            .from('profiles')
+            .select('points')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        if (data && data.points !== undefined) {
+            userPoints = data.points;
+        } else {
+            // 若無資料，寫入預設 5 點
+            const { data: newProfile } = await supabaseClient
+                .from('profiles')
+                .upsert([{ id: user.id, email: user.email, points: 5 }])
+                .select('points')
+                .maybeSingle();
+            userPoints = newProfile ? newProfile.points : 5;
+        }
+    } catch (err) {
+        console.error("Error syncing profile:", err);
+    } finally {
+        // 確保無論如何都更新 UI 狀態
+        updateNavState();
+    }
+}
+       
         // 渲染圖庫
         function renderGallery() {
             const grid = document.getElementById('gallery-grid');
