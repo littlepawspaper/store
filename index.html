@@ -331,63 +331,112 @@
         </div>
     </div>
 
-    <!-- 2. 儲值點數彈窗 (Top Up Modal) -->
-<div id="topup-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-    <!-- 電腦版最大寬度調大至 md:max-w-2xl lg:max-w-3xl -->
-    <div class="bg-white rounded-3xl max-w-xl md:max-w-2xl lg:max-w-3xl w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 p-6 sm:p-8 md:p-10" id="topup-modal-content">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                    <h3 class="font-serif text-xl sm:text-2xl font-bold text-sage-700">Top Up Paws Point 🐾</h3>
-                    <p class="text-[11px] sm:text-xs text-sage-600 mt-0.5">Choose a bundle to get instant download credits.</p>
-                </div>
-                <button onclick="closeTopUpModal()" class="w-7 h-7 rounded-full bg-cream-100 hover:bg-cream-200 text-sage-700 flex items-center justify-center text-xs transition">
-                    ✕
+    
+    <!-- Top Up (Pricing) Modal -->
+    <div id="topup-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeTopUpModal()"></div>
+        
+        <!-- Modal Content Container -->
+        <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0 pointer-events-none">
+            
+            <!-- Modal Panel -->
+            <div id="topup-panel" class="modal-enter relative overflow-hidden rounded-3xl bg-white text-left shadow-2xl sm:my-8 sm:w-full sm:max-w-5xl border border-brand-milktea pointer-events-auto">
+                
+                <!-- Close Button -->
+                <button onclick="closeTopUpModal()" class="absolute top-4 right-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-brand-milktea/50 text-gray-500 hover:text-brand-sage hover:bg-brand-milktea transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
-            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-5">
-                <!-- Starter -->
-                <div class="border border-cream-200 rounded-2xl p-4 text-center hover:border-sage-500 transition flex sm:flex-col justify-between items-center sm:items-stretch">
-                    <div class="text-left sm:text-center">
-                        <div class="text-[10px] font-semibold text-sage-500 uppercase tracking-wider mb-0.5">Starter</div>
-                        <div class="font-serif text-2xl sm:text-3xl font-bold text-sage-700">50 <span class="text-xs font-sans text-sage-500">Pts</span></div>
-                        <div class="text-[11px] text-sage-600">$5.00 USD</div>
+                <div class="px-6 py-12 sm:px-12 sm:py-16 bg-[#FAFAFA]">
+                    <div class="text-center mb-12">
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text mb-4">Get More Paws Point 🐾</h2>
+                        <p class="text-gray-600 font-light max-w-2xl mx-auto">Unlock more exclusive coloring pages. Choose the package that fits your creative journey. Secure payment via Stripe.</p>
                     </div>
-                    <button onclick="simulateTopUp(50, 5)" class="w-auto sm:w-full mt-0 sm:mt-3 bg-cream-100 hover:bg-sage-500 hover:text-white text-sage-700 text-xs font-semibold px-4 py-2 sm:py-2.5 rounded-xl transition whitespace-nowrap">
-                        Select
-                    </button>
-                </div>
 
-                <!-- Creative -->
-                <div class="border-2 border-sage-500 bg-sage-50/30 rounded-2xl p-4 text-center shadow-sm relative flex sm:flex-col justify-between items-center sm:items-stretch">
-                    <span class="absolute -top-2.5 left-4 sm:left-1/2 sm:-translate-x-1/2 bg-sage-500 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Popular</span>
-                    <div class="text-left sm:text-center mt-1 sm:mt-0">
-                        <div class="text-[10px] font-semibold text-sage-500 uppercase tracking-wider mb-0.5">Creative</div>
-                        <div class="font-serif text-2xl sm:text-3xl font-bold text-sage-700">120 <span class="text-xs font-sans text-sage-500">Pts</span></div>
-                        <div class="text-[11px] text-sage-600">$10.00 USD</div>
+                    <!-- Pricing Cards Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
+                        
+                        <!-- Starter Pack -->
+                        <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:border-brand-sage hover:shadow-lg transition-all">
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Starter Pack</h3>
+                            <div class="flex items-baseline mb-4">
+                                <span class="text-4xl font-bold text-brand-text">$5</span>
+                                <span class="text-gray-500 ml-2">USD</span>
+                            </div>
+                            <div class="bg-brand-milktea rounded-xl p-4 mb-8 text-center">
+                                <span class="block text-2xl mb-1">🐾 50</span>
+                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
+                            </div>
+                            <button onclick="mockCheckout('Starter Pack', 5, 50)" class="mt-auto w-full border-2 border-brand-sage text-brand-sage py-3 rounded-full font-medium hover:bg-brand-sage hover:text-white transition-colors">
+                                Choose Starter
+                            </button>
+                        </div>
+
+                        <!-- Popular Pack (Highlighted) -->
+                        <div class="bg-white rounded-2xl border-2 border-brand-sage p-8 flex flex-col shadow-xl relative transform md:-translate-y-4">
+                            <!-- Badge -->
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-sage text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                                Most Popular
+                            </div>
+                            
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Creative Pack</h3>
+                            <div class="flex items-baseline mb-4">
+                                <span class="text-4xl font-bold text-brand-text">$10</span>
+                                <span class="text-gray-500 ml-2">USD</span>
+                            </div>
+                            <div class="bg-brand-sage/10 rounded-xl p-4 mb-8 text-center relative overflow-hidden">
+                                <div class="absolute -right-4 -top-4 w-12 h-12 bg-brand-sage/20 rounded-full blur-xl"></div>
+                                <span class="block text-3xl font-bold text-brand-sage-dark mb-1">🐾 120</span>
+                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
+                                <span class="block text-xs text-brand-sage mt-2 font-medium">+20 Bonus Points!</span>
+                            </div>
+                            <button onclick="mockCheckout('Creative Pack', 10, 120)" class="mt-auto w-full bg-brand-sage text-white py-3 rounded-full font-medium hover:bg-brand-sage-dark transition-colors shadow-md">
+                                Choose Creative
+                            </button>
+                        </div>
+
+                        <!-- Value Pack -->
+                        <div class="bg-white rounded-2xl border border-gray-200 p-8 flex flex-col hover:border-brand-sage hover:shadow-lg transition-all">
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Artist Pack</h3>
+                            <div class="flex items-baseline mb-4">
+                                <span class="text-4xl font-bold text-brand-text">$20</span>
+                                <span class="text-gray-500 ml-2">USD</span>
+                            </div>
+                            <div class="bg-brand-milktea rounded-xl p-4 mb-8 text-center">
+                                <span class="block text-2xl mb-1">🐾 280</span>
+                                <span class="text-sm font-medium text-brand-sage-dark">Paws Point</span>
+                                <span class="block text-xs text-gray-500 mt-2 font-medium">+80 Bonus Points!</span>
+                            </div>
+                            <button onclick="mockCheckout('Artist Pack', 20, 280)" class="mt-auto w-full border-2 border-brand-sage text-brand-sage py-3 rounded-full font-medium hover:bg-brand-sage hover:text-white transition-colors">
+                                Choose Artist
+                            </button>
+                        </div>
+
                     </div>
-                    <button onclick="simulateTopUp(120, 10)" class="w-auto sm:w-full mt-0 sm:mt-3 bg-sage-500 hover:bg-sage-600 text-white text-xs font-semibold px-4 py-2 sm:py-2.5 rounded-xl shadow transition whitespace-nowrap">
-                        Select
-                    </button>
-                </div>
-
-                <!-- Artist -->
-                <div class="border border-cream-200 rounded-2xl p-4 text-center hover:border-sage-500 transition flex sm:flex-col justify-between items-center sm:items-stretch">
-                    <div class="text-left sm:text-center">
-                        <div class="text-[10px] font-semibold text-sage-500 uppercase tracking-wider mb-0.5">Artist</div>
-                        <div class="font-serif text-2xl sm:text-3xl font-bold text-sage-700">280 <span class="text-xs font-sans text-sage-500">Pts</span></div>
-                        <div class="text-[11px] text-sage-600">$20.00 USD</div>
+                    
+                    <!-- Secure Payment Info -->
+                    <div class="mt-12 text-center flex flex-col items-center justify-center">
+                        <p class="text-xs text-gray-400 mb-3 uppercase tracking-wider font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            Guaranteed Safe & Secure Checkout
+                        </p>
+                        <!-- Fake payment icons using styled divs (in real site, use SVG logos) -->
+                        <div class="flex space-x-2">
+                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold text-blue-900">VISA</div>
+                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center">
+                                <div class="flex -space-x-2">
+                                    <div class="w-4 h-4 rounded-full bg-red-500 mix-blend-multiply opacity-80"></div>
+                                    <div class="w-4 h-4 rounded-full bg-yellow-400 mix-blend-multiply opacity-80"></div>
+                                </div>
+                            </div>
+                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold">Pay</div>
+                            <div class="h-8 w-12 bg-white rounded border border-gray-200 flex items-center justify-center text-[10px] font-bold">G Pay</div>
+                        </div>
                     </div>
-                    <button onclick="simulateTopUp(280, 20)" class="w-auto sm:w-full mt-0 sm:mt-3 bg-cream-100 hover:bg-sage-500 hover:text-white text-sage-700 text-xs font-semibold px-4 py-2 sm:py-2.5 rounded-xl transition whitespace-nowrap">
-                        Select
-                    </button>
                 </div>
-            </div>
-
-            <div class="flex items-center justify-center space-x-2 text-[11px] text-sage-600 pt-3 border-t border-cream-100">
-                <span>🔒 Secure Stripe Checkout</span>
-                <span>•</span>
-                <span>Instant Credit</span>
             </div>
         </div>
     </div>
