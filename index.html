@@ -228,7 +228,7 @@
                             </span>
                         </div>
                         <button onclick="handleDownload()" class="bg-sage-500 hover:bg-sage-600 text-white text-xs sm:text-base md:text-lg font-medium px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl shadow-md transition flex items-center space-x-2 whitespace-nowrap">
-                            <span>Download Now</span>
+                            <span>View & Download</span>
                         </button>
                     </div>
                 </div>
@@ -769,20 +769,20 @@ async function syncUserProfile(user) {
         userPoints -= currentSelectedData.cost;
         updateNavState();
 
-        // 6. 開始下載
-        const link = document.createElement('a');
-        link.href = data.signedUrl;
-        link.download = pdfPath.split('/').pop();
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // 6. 在新分頁開啟 PDF
+const pdfWindow = window.open(data.signedUrl, '_blank');
 
-        closePreview();
+if (!pdfWindow) {
+    showToast("Please allow pop-ups to open the PDF.", "⚠️");
+    return;
+}
 
-        showToast(
-            `Downloaded "${currentSelectedData.title}" (${selectedPaperFormat}).`,
-            "📥"
-        );
+closePreview();
+
+showToast(
+    `Opened "${currentSelectedData.title}" (${selectedPaperFormat}).`,
+    "📄"
+);
 
     } catch (error) {
 
