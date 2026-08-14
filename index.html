@@ -55,6 +55,13 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        /* Custom Hero Background */
+        .hero-bg {
+            background-color: #E5DCBC; /* Fallback */
+            background-image: url('cat.jpg');
+            background-size: cover;
+            background-position: center;
+        }
     </style>
 </head>
 <body class="bg-cream-50 text-sage-700 min-h-screen flex flex-col selection:bg-sage-100">
@@ -97,20 +104,23 @@
         </div>
     </header>
 
-    <!-- 主視覺區塊 (Hero Section) - 電腦版 100% 滿版底色，手機版維持原樣 -->
-    <section class="w-full bg-cream-100 py-6 sm:py-16 px-4 text-center border-b border-cream-200">
-        <div class="max-w-3xl mx-auto">
+    <!-- 主視覺區塊 (Hero Section) - 使用 cat.jpg 作為背景 -->
+    <section class="w-full relative hero-bg flex items-center justify-center border-b border-cream-200 h-[300px] md:h-[360px]">
+        <!-- 微透明遮罩，確保在圖片背景下文字依然清晰 -->
+        <div class="absolute inset-0 bg-white/70 backdrop-blur-[1px]"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-3xl mx-auto">
             <h1 class="font-serif text-3xl sm:text-6xl font-bold tracking-tight text-sage-700 mb-2 sm:mb-4">
                 Color Your World <span class="italic font-normal text-sage-500">with Joy</span>
             </h1>
-            <p class="text-xs sm:text-lg text-sage-600/90 max-w-xl mx-auto font-light leading-relaxed mb-5 px-2">
-                Discover exclusive printable coloring pages. <br>Join today and get <strong class="font-semibold text-sage-700">5 Free Paws Point</strong> to start downloading!
+            <p class="text-xs sm:text-lg text-sage-700 max-w-xl mx-auto font-medium leading-relaxed mb-5 px-2">
+                Discover exclusive printable coloring pages. <br>Join today and get <strong class="font-bold text-sage-600">5 Free Paws Point</strong> to start downloading!
             </p>
             <div class="flex items-center justify-center gap-2 sm:gap-4">
-                <a href="#gallery" class="whitespace-nowrap bg-sage-500 hover:bg-sage-600 text-white font-medium px-5 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base">
+                <a href="#gallery" class="whitespace-nowrap bg-sage-500 hover:bg-sage-600 text-white font-medium px-5 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-md transition text-xs sm:text-base">
                     Explore Gallery
                 </a>
-                <button onclick="openTopUpModal()" class="whitespace-nowrap bg-white hover:bg-cream-100 text-sage-700 border border-sage-500/30 font-medium px-4 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-sm transition text-xs sm:text-base flex items-center justify-center space-x-1">
+                <button onclick="openTopUpModal()" class="whitespace-nowrap bg-white hover:bg-cream-100 text-sage-700 border border-sage-500/30 font-medium px-4 py-2.5 sm:px-8 sm:py-3.5 rounded-full shadow-md transition text-xs sm:text-base flex items-center justify-center space-x-1">
                     <span>Get Paws Point</span>
                     <span>🐾</span>
                 </button>
@@ -119,7 +129,7 @@
     </section>
 
     <!-- 主圖庫區塊 (Gallery Section) -->
-    <main id="gallery" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex-grow w-full">
+    <main id="gallery" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-grow w-full">
         
         <!-- 分類標籤欄 -->
         <div class="flex flex-wrap items-center justify-center gap-2 mb-8 sm:mb-12">
@@ -141,7 +151,7 @@
         </div>
 
         <!-- 填色圖動態網格容器 -->
-        <div id="gallery-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+        <div id="gallery-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             <!-- 動態渲染卡片位置 -->
         </div>
 
@@ -152,12 +162,12 @@
             </button>
         </div>
         <!-- Back to Top 文字連結 -->
-        <div class="mt-4 text-center">
+        <div class="mt-6 text-center">
             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
             class="text-sage-600 hover:text-sage-800 underline text-xs sm:text-sm transition-colors cursor-pointer bg-transparent border-0 p-0">
             Back to Top
             </button>
-</div>
+        </div>
     </main>
 
     <!-- 底部資訊列 (Footer) -->
@@ -171,7 +181,7 @@
                 <a href="#" class="hover:text-sage-500 transition">Terms</a>
                 <a href="#" class="hover:text-sage-500 transition">Privacy</a>
                 <a href="#" class="hover:text-sage-500 transition">Instagram</a>
-                <a href="#" class="hover:text-sage-500 transition">Etsy Shop</a>
+                <a href="https://littlepawspaper.etsy.com" class="hover:text-sage-500 transition">Etsy Shop</a>
             </div>
         </div>
     </footer>
@@ -236,14 +246,12 @@
         </div>
     </div>
 
-    <!-- 2. 儲值點數彈窗 (Top Up Modal) - 完美還原設計圖 -->
-<div id="topup-modal" class="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300 overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-xl md:max-w-4xl lg:max-w-5xl w-full overflow-y-auto max-h-[88vh] my-auto shadow-2xl transform scale-95 transition-transform duration-300 relative p-6 sm:p-10 md:p-12" id="topup-modal-content">
-        
-        <!-- 關閉按鈕：加上 z-10 與 sticky/absolute 確保手機滑動時依然能點擊或固定在右上角 -->
-        <button onclick="closeTopUpModal()" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50 hover:bg-cream-100 text-sage-500 flex items-center justify-center text-sm md:text-base font-bold transition z-10">✕</button>
+    <!-- 2. 儲值點數彈窗 (Top Up Modal) -->
+    <div id="topup-modal" class="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-xl md:max-w-4xl lg:max-w-5xl w-full overflow-y-auto max-h-[88vh] my-auto shadow-2xl transform scale-95 transition-transform duration-300 relative p-6 sm:p-10 md:p-12" id="topup-modal-content">
+            <button onclick="closeTopUpModal()" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-cream-50 hover:bg-cream-100 text-sage-500 flex items-center justify-center text-sm md:text-base font-bold transition z-10">✕</button>
 
-        <div class="text-center mb-6 md:mb-12 pt-2 sm:pt-0">
+            <div class="text-center mb-6 md:mb-12 pt-2 sm:pt-0">
                 <h3 class="font-serif text-2xl md:text-4xl lg:text-5xl font-bold text-sage-700 mb-2 md:mb-4">Get More Paws Point 🐾</h3>
                 <p class="text-[11px] sm:text-xs md:text-sm text-sage-600 max-w-lg mx-auto leading-relaxed">Unlock more exclusive coloring pages. Choose the package that fits your creative journey. <br class="hidden sm:block">Secure payment via Stripe.</p>
             </div>
@@ -262,7 +270,7 @@
                     </button>
                 </div>
 
-                <!-- Creative Pack (中心凸顯) -->
+                <!-- Creative Pack -->
                 <div class="border-2 border-sage-500 rounded-3xl p-6 md:p-8 flex flex-col bg-white relative shadow-xl transform md:-translate-y-4">
                     <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-sage-500 text-white text-[9px] md:text-[11px] font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
                         Most Popular
@@ -293,8 +301,7 @@
                     </button>
                 </div>
             </div>
-
-            <!-- 底部安全付款圖示 -->
+            
             <div class="text-center">
                 <div class="flex items-center justify-center space-x-2 text-[9px] md:text-[11px] text-sage-500 font-bold uppercase tracking-widest mb-4">
                     <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
@@ -346,11 +353,109 @@
         </div>
     </div>
 
-    <!-- 4. Toast 通知列 -->
+    <!-- 4. 註冊成功 Check Email 彈窗 -->
+    <div id="check-email-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl border border-cream-200 transform scale-95 transition-transform duration-300 p-8 text-center" id="check-email-content">
+            <div class="w-16 h-16 bg-cream-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl">📧</span>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-sage-700 mb-2">Check Your Email</h3>
+            <p class="text-sm text-sage-600 leading-relaxed mb-6">
+                We've sent a verification link to your email address. Please click the link to activate your account and claim your <strong class="text-sage-700">5 Free Paws Points!</strong>
+            </p>
+            <button onclick="closeCheckEmailModal()" class="w-full bg-sage-500 hover:bg-sage-600 text-white font-medium py-2.5 rounded-xl shadow transition text-sm">
+                Got it, Thanks!
+            </button>
+        </div>
+    </div>
+
+    <!-- 5. Toast 通知列 -->
     <div id="toast" class="fixed bottom-5 right-5 left-5 sm:left-auto z-50 bg-sage-700 text-white px-5 py-3 rounded-2xl shadow-xl transform translate-y-24 opacity-0 transition-all duration-300 flex items-center justify-center sm:justify-start space-x-2 text-xs sm:text-sm font-medium">
         <span id="toast-icon" class="text-base">✨</span>
         <span id="toast-msg">Notification message</span>
     </div>
+
+    <!-- ========================================== -->
+    <!-- 產品資料庫 (嚴格的 JSON 格式) -->
+    <!-- ========================================== -->
+    <script type="application/json" id="products-data">
+    [
+        {
+            "title": "Neko Cafe",
+            "category": "kids",
+            "categoryName": "Kids Zone",
+            "desc": "Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!",
+            "cost": 1,
+            "image": "https://pudkxqaerzjyqochbbeu.supabase.co/storage/v1/object/public/thumbnails/nekocafe-k001-01.png?auto=format&fit=crop&w=800&q=80",
+            "pdfA4": "nekocafe_a4_k001.pdf",
+            "pdfUS": "nekocafe_us_k001.pdf",
+            "badge": null
+        },
+        {
+            "title": "Cozy Sleeping Cat",
+            "category": "cozy",
+            "categoryName": "Cozy Life",
+            "desc": "A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.",
+            "cost": 1,
+            "image": "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80",
+            "badge": null
+        },
+        {
+            "title": "Zen Garden Mandala",
+            "category": "mandala",
+            "categoryName": "Mandala & Zen",
+            "desc": "An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.",
+            "cost": 2,
+            "image": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+            "badge": "Detailed"
+        },
+        {
+            "title": "Fairy Mushroom House",
+            "category": "kids",
+            "categoryName": "Kids Zone",
+            "desc": "A magical whimsical mushroom cottage surrounded by flowers and butterflies. Simple bold outlines perfect for children and casual coloring.",
+            "cost": 1,
+            "image": "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80",
+            "badge": "Kids Favorite"
+        },
+        {
+            "title": "Blooming Botanicals",
+            "category": "floral",
+            "categoryName": "Botanical",
+            "desc": "Hand-drawn wild flowers and ferns arranged in an elegant composition. Great for framing after coloring.",
+            "cost": 1,
+            "image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800&q=80",
+            "badge": null
+        },
+        {
+            "title": "Rainy Window Tea Time",
+            "category": "cozy",
+            "categoryName": "Cozy Life",
+            "desc": "Enjoy a peaceful rainy afternoon with a hot cup of tea, pastries, and a warm blanket.",
+            "cost": 1,
+            "image": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80",
+            "badge": "Bestseller"
+        },
+        {
+            "title": "Geometric Harmony",
+            "category": "mandala",
+            "categoryName": "Mandala & Zen",
+            "desc": "Symmetrical patterns designed to soothe your mind and enhance focus.",
+            "cost": 2,
+            "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+            "badge": null
+        },
+        {
+            "title": "Happy Little Dinosaur",
+            "category": "kids",
+            "categoryName": "Kids Zone",
+            "desc": "Friendly little dino having fun in the sunny forest. Extra thick lines for easy coloring.",
+            "cost": 1,
+            "image": "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80",
+            "badge": null
+        }
+    ]
+    </script>
 
     <script>
         // ==========================================
@@ -365,168 +470,106 @@
         }
 
         // ==========================================
-        // 產品資料庫 (支援 Load More 分頁功能)
+        // 產品資料載入與渲染 (Fetch 檔案 or 讀取內嵌 JSON)
         // ==========================================
-        const allProducts = [
-            {
-                title: 'Neko Cafe',
-                category: 'kids',
-                categoryName: 'Kids Zone',
-                desc: 'Enjoy coloring this beautiful, high-resolution original design. Perfect for relaxation, art therapy, and creative expression. Print on your favorite paper (A4 or US Letter) and let your imagination flow!',
-                cost: 1,
-                image: 'https://pudkxqaerzjyqochbbeu.supabase.co/storage/v1/object/public/thumbnails/nekocafe-k001-01.png?auto=format&fit=crop&w=800&q=80',
-                    pdfA4: 'nekocafe_a4_k001.pdf',
-                    pdfUS: 'nekocafe_us_k001.pdf',
-                badge: null
-            },
-            {
-                title: 'Cozy Sleeping Cat',
-                category: 'cozy',
-                categoryName: 'Cozy Life',
-                desc: 'A heartwarming scene featuring a lazy cat curled up beside a steaming mug of coffee and books. Super cozy illustration designed to bring peace to your weekend.',
-                cost: 1,
-                image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=800&q=80',
-                badge: null
-            },
-            {
-                title: 'Zen Garden Mandala',
-                category: 'mandala',
-                categoryName: 'Mandala & Zen',
-                desc: 'An intricate, highly detailed geometric mandala pattern designed for mindfulness meditation. Recommended for advanced colorists looking for an immersive project.',
-                cost: 2,
-                image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
-                badge: 'Detailed'
-            },
-            {
-                title: 'Fairy Mushroom House',
-                category: 'kids',
-                categoryName: 'Kids Zone',
-                desc: 'A magical whimsical mushroom cottage surrounded by flowers and butterflies. Simple bold outlines perfect for children and casual coloring.',
-                cost: 1,
-                image: 'https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=800&q=80',
-                badge: 'Kids Favorite'
-            },
-            {
-                title: 'Blooming Botanicals',
-                category: 'floral',
-                categoryName: 'Botanical',
-                desc: 'Hand-drawn wild flowers and ferns arranged in an elegant composition. Great for framing after coloring.',
-                cost: 1,
-                image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800&q=80',
-                badge: null
-            },
-            {
-                title: 'Rainy Window Tea Time',
-                category: 'cozy',
-                categoryName: 'Cozy Life',
-                desc: 'Enjoy a peaceful rainy afternoon with a hot cup of tea, pastries, and a warm blanket.',
-                cost: 1,
-                image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80',
-                badge: 'Bestseller'
-            },
-            {
-                title: 'Geometric Harmony',
-                category: 'mandala',
-                categoryName: 'Mandala & Zen',
-                desc: 'Symmetrical patterns designed to soothe your mind and enhance focus.',
-                cost: 2,
-                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
-                badge: null
-            },
-            {
-                title: 'Happy Little Dinosaur',
-                category: 'kids',
-                categoryName: 'Kids Zone',
-                desc: 'Friendly little dino having fun in the sunny forest. Extra thick lines for easy coloring.',
-                cost: 1,
-                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
-                badge: null
-            }
-        ];
-
-        let currentDisplayCount = 4; // 預設一開始顯示 4 張
+        let allProducts = [];
+        let currentDisplayCount = 4;
         let currentFilter = 'all';
+        let isLoggedIn = false;
+        let userPoints = 5; 
+        let currentAuthMode = 'signin'; 
+        let currentSelectedData = null;
+        let selectedPaperFormat = 'A4';
 
-        // 初始化與 Supabase 狀態監聽
-document.addEventListener('DOMContentLoaded', async () => {
-    renderGallery();
-
-    if (supabaseClient) {
-        // 1. 頁面開啟時主動檢查 Session（處理 Google 登入跳轉）
-        try {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session && session.user) {
-                isLoggedIn = true;
-                currentUser = session.user;
-                await syncUserProfile(session.user);
-                
-                // 清除網址列長長的 #access_token=... 保持乾淨
-                if (window.location.hash.includes('access_token')) {
-                    history.replaceState(null, '', window.location.pathname);
-                    showToast("Welcome! Signed in with Google 🐾", "🎉");
+        async function loadProducts() {
+            // 1. 優先嘗試透過 fetch 載入外部的 products.json
+            try {
+                const response = await fetch('products.json');
+                if (response.ok) {
+                    allProducts = await response.json();
+                    console.log("Data loaded from fetch('products.json')");
+                    return;
                 }
+            } catch (error) {
+                console.warn("fetch('products.json') failed, falling back to embedded JSON block.");
             }
-        } catch (e) {
-            console.error("Session check error:", e);
+
+            // 2. 備用方案：抓取上方 <script id="products-data"> 內的純 JSON 字串
+            try {
+                const rawJson = document.getElementById('products-data').textContent;
+                allProducts = JSON.parse(rawJson);
+                console.log("Data loaded from embedded <script id='products-data'>");
+            } catch (error) {
+                console.error("Error parsing embedded JSON:", error);
+                allProducts = []; // 避免渲染報錯
+            }
         }
 
-        // 2. 監聽 Auth 狀態變更
-        supabaseClient.auth.onAuthStateChange(async (event, session) => {
-            if (session && session.user) {
-                isLoggedIn = true;
-                currentUser = session.user;
-                await syncUserProfile(session.user);
-            } else {
-                isLoggedIn = false;
-                currentUser = null;
-                updateNavState();
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadProducts(); // 確保資料載入完成
+            renderGallery();      // 渲染畫面
+
+            if (supabaseClient) {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (session && session.user) {
+                        isLoggedIn = true;
+                        await syncUserProfile(session.user);
+                        if (window.location.hash.includes('access_token')) {
+                            history.replaceState(null, '', window.location.pathname);
+                            showToast("Welcome! Signed in with Google 🐾", "🎉");
+                        }
+                    }
+                } catch (e) {
+                    console.error("Session check error:", e);
+                }
+
+                supabaseClient.auth.onAuthStateChange(async (event, session) => {
+                    if (session && session.user) {
+                        isLoggedIn = true;
+                        await syncUserProfile(session.user);
+                    } else {
+                        isLoggedIn = false;
+                        updateNavState();
+                    }
+                });
             }
         });
-    }
-});
 
-// 向 Supabase 查詢/建立使用者點數資料
-async function syncUserProfile(user) {
-    if (!supabaseClient || !user) return;
+        async function syncUserProfile(user) {
+            if (!supabaseClient || !user) return;
+            try {
+                let { data, error } = await supabaseClient
+                    .from('profiles')
+                    .select('points')
+                    .eq('id', user.id)
+                    .maybeSingle();
 
-    try {
-        // 讀取或自動建立 Profiles 資料表
-        let { data, error } = await supabaseClient
-            .from('profiles')
-            .select('points')
-            .eq('id', user.id)
-            .maybeSingle();
-
-        if (data && data.points !== undefined) {
-            userPoints = data.points;
-        } else {
-            // 若無資料，寫入預設 5 點
-            const { data: newProfile } = await supabaseClient
-                .from('profiles')
-                .upsert([{ id: user.id, email: user.email, points: 5 }])
-                .select('points')
-                .maybeSingle();
-            userPoints = newProfile ? newProfile.points : 5;
+                if (data && data.points !== undefined) {
+                    userPoints = data.points;
+                } else {
+                    const { data: newProfile } = await supabaseClient
+                        .from('profiles')
+                        .upsert([{ id: user.id, email: user.email, points: 5 }])
+                        .select('points')
+                        .maybeSingle();
+                    userPoints = newProfile ? newProfile.points : 5;
+                }
+            } catch (err) {
+                console.error("Error syncing profile:", err);
+            } finally {
+                updateNavState();
+            }
         }
-    } catch (err) {
-        console.error("Error syncing profile:", err);
-    } finally {
-        // 確保無論如何都更新 UI 狀態
-        updateNavState();
-    }
-}
-       
-        // 渲染圖庫
+
         function renderGallery() {
             const grid = document.getElementById('gallery-grid');
             grid.innerHTML = '';
 
-            // 過濾分類
             const filtered = currentFilter === 'all' 
                 ? allProducts 
                 : allProducts.filter(p => p.category === currentFilter);
 
-            // 分頁限制
             const sliced = filtered.slice(0, currentDisplayCount);
 
             sliced.forEach(product => {
@@ -560,7 +603,6 @@ async function syncUserProfile(user) {
                 grid.innerHTML += cardHtml;
             });
 
-            // 判斷是否隱藏 Load More 按鈕
             const loadMoreBtn = document.getElementById('load-more-container');
             if (currentDisplayCount >= filtered.length) {
                 loadMoreBtn.style.display = 'none';
@@ -569,53 +611,36 @@ async function syncUserProfile(user) {
             }
         }
 
-        // 點擊 Load More 按鈕
         function loadMorePages() {
-            currentDisplayCount += 4; // 每次多載入 4 張
+            currentDisplayCount += 4;
             renderGallery();
         }
 
-        // 過濾分類
         function filterGallery(category) {
             currentFilter = category;
-            currentDisplayCount = 4; // 切換分類時重置顯示數量
+            currentDisplayCount = 4;
 
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => {
+            document.querySelectorAll('.category-btn').forEach(btn => {
                 if(btn.dataset.filter === category) {
                     btn.className = "category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-sage-500 text-white shadow-sm transition";
                 } else {
                     btn.className = "category-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-cream-100 hover:bg-sage-100 text-sage-700 transition";
                 }
             });
-
             renderGallery();
         }
 
-        // ==========================================
-        // 核心認證與互動邏輯
-        // ==========================================
-        let isLoggedIn = false;
-        let userPoints = 5; 
-        let currentAuthMode = 'signin'; 
-        let currentSelectedData = null;
-        let selectedPaperFormat = 'A4';
-
-        
-            async function handleGoogleAuth() {
-    if (supabaseClient) {
-        const { error } = await supabaseClient.auth.signInWithOAuth({ 
-            provider: 'google',
-            options: {
-                redirectTo: window.location.origin // 讓 Google 登入後自動跳回當前網站網址
+        async function handleGoogleAuth() {
+            if (supabaseClient) {
+                const { error } = await supabaseClient.auth.signInWithOAuth({ 
+                    provider: 'google',
+                    options: { redirectTo: window.location.origin }
+                });
+                if (error) showToast(error.message, "⚠️");
+            } else {
+                mockLoginSuccess();
             }
-        });
-        if (error) showToast(error.message, "⚠️");
-    } else {
-        mockLoginSuccess();
-    }
-}
-
+        }
 
         async function handleEmailAuth(event) {
             event.preventDefault(); 
@@ -630,8 +655,8 @@ async function syncUserProfile(user) {
                     const { error } = await supabaseClient.auth.signUp({ email, password });
                     if (error) showToast(error.message, "⚠️");
                     else {
-                        showToast("Check your email to verify your account!", "📧");
                         closeAuthModal();
+                        openCheckEmailModal(); // 顯示 Check Email 提示畫面
                     }
                 } else {
                     const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
@@ -639,7 +664,15 @@ async function syncUserProfile(user) {
                     else mockLoginSuccess(); 
                 }
             } else {
-                setTimeout(() => mockLoginSuccess(), 800);
+                // Mock 測試模式
+                setTimeout(() => {
+                    if (currentAuthMode === 'signup') {
+                        closeAuthModal();
+                        openCheckEmailModal();
+                    } else {
+                        mockLoginSuccess();
+                    }
+                }, 800);
             }
             btnText.textContent = currentAuthMode === 'signup' ? "Sign Up" : "Sign In";
         }
@@ -720,77 +753,59 @@ async function syncUserProfile(user) {
             element.querySelector('input').checked = true;
         }
 
-       async function handleDownload() {
+        async function handleDownload() {
+            if (!isLoggedIn) {
+                closePreview();
+                openAuthModal('signin');
+                showToast("Please sign in to download.", "🔒");
+                return;
+            }
 
-    // 1. 必須登入
-    if (!isLoggedIn) {
-        closePreview();
-        openAuthModal('signin');
-        showToast("Please sign in to download.", "🔒");
-        return;
-    }
+            if (userPoints < currentSelectedData.cost) {
+                closePreview();
+                openTopUpModal();
+                showToast("Not enough Paws Points! Please top up.", "💡");
+                return;
+            }
 
-    // 2. 檢查 Points
-    if (userPoints < currentSelectedData.cost) {
-        closePreview();
-        openTopUpModal();
-        showToast("Not enough Paws Points! Please top up.", "💡");
-        return;
-    }
+            const pdfPath = selectedPaperFormat === 'A4' ? currentSelectedData.pdfA4 : currentSelectedData.pdfUS;
 
-    // 3. 根據使用者選擇 A4 / US Letter
-    const pdfPath =
-        selectedPaperFormat === 'A4'
-            ? currentSelectedData.pdfA4
-            : currentSelectedData.pdfUS;
+            if (!pdfPath) {
+                showToast("PDF file not found.", "⚠️");
+                return;
+            }
 
-    if (!pdfPath) {
-        showToast("PDF file not found.", "⚠️");
-        return;
-    }
+            try {
+                showToast("Preparing your download...", "📄");
 
-    try {
+                if(supabaseClient) {
+                    const { data, error } = await supabaseClient.storage.from('pdfs').createSignedUrl(pdfPath, 60);
+                    if (error) {
+                        console.error("Signed URL error:", error);
+                        showToast("Unable to prepare download.", "⚠️");
+                        return;
+                    }
+                    userPoints -= currentSelectedData.cost;
+                    updateNavState();
+                    const pdfWindow = window.open(data.signedUrl, '_blank');
+                    if (!pdfWindow) {
+                        showToast("Please allow pop-ups to open the PDF.", "⚠️");
+                        return;
+                    }
+                } else {
+                    // Mock Download
+                    userPoints -= currentSelectedData.cost;
+                    updateNavState();
+                }
 
-        showToast("Preparing your download...", "📄");
+                closePreview();
+                showToast(`Opened "${currentSelectedData.title}" (${selectedPaperFormat}).`, "📄");
 
-        // 4. 從 Private Bucket 產生 Signed URL
-        const { data, error } = await supabaseClient
-            .storage
-            .from('pdfs')
-            .createSignedUrl(pdfPath, 60);
-
-        if (error) {
-            console.error("Signed URL error:", error);
-            showToast("Unable to prepare download.", "⚠️");
-            return;
+            } catch (error) {
+                console.error("Download error:", error);
+                showToast("Download failed. Please try again.", "⚠️");
+            }
         }
-
-        // 5. PDF 成功取得後才扣 Point
-        userPoints -= currentSelectedData.cost;
-        updateNavState();
-
-        // 6. 在新分頁開啟 PDF
-const pdfWindow = window.open(data.signedUrl, '_blank');
-
-if (!pdfWindow) {
-    showToast("Please allow pop-ups to open the PDF.", "⚠️");
-    return;
-}
-
-closePreview();
-
-showToast(
-    `Opened "${currentSelectedData.title}" (${selectedPaperFormat}).`,
-    "📄"
-);
-
-    } catch (error) {
-
-        console.error("Download error:", error);
-        showToast("Download failed. Please try again.", "⚠️");
-
-    }
-}
 
         function openTopUpModal() {
             const modal = document.getElementById('topup-modal');
@@ -845,6 +860,25 @@ showToast(
         function closeAuthModal() {
             const modal = document.getElementById('auth-modal');
             const content = document.getElementById('auth-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // 開啟與關閉 Check Email 彈窗
+        function openCheckEmailModal() {
+            const modal = document.getElementById('check-email-modal');
+            const content = document.getElementById('check-email-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeCheckEmailModal() {
+            const modal = document.getElementById('check-email-modal');
+            const content = document.getElementById('check-email-content');
             modal.classList.add('opacity-0');
             content.classList.add('scale-95');
             setTimeout(() => modal.classList.add('hidden'), 300);
